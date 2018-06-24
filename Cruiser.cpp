@@ -3,6 +3,7 @@
 //
 
 #include "Cruiser.h"
+#include "Freighter.h"
 
 Cruiser::Cruiser(std::string shipName, const Point& pos, int resOatt, int rangeOcap) : Ship(shipName,pos)
 , Force_of_attack(resOatt), range(rangeOcap),myType(CR){}
@@ -24,5 +25,15 @@ void Cruiser::attack(std::weak_ptr<Ship> ship){
         //throw exception
     }
     ship.lock()->setStatus(Stopped);
+    if(myType == Ship::TypeIdShip::FR){
+        auto fr = dynamic_pointer_cast<Freighter>(ship.lock());
+
+        if(Force_of_attack > fr->getResistance()){
+            Force_of_attack++;
+            fr->setContainers(0);
+        }
+        else
+            Force_of_attack--;
+    }
 
 }

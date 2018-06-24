@@ -30,6 +30,20 @@ public:
 
 private:
     int Resistance, Containers, Gas;
+public:
+    int getResistance() const;
+
+    void setResistance(int Resistance);
+
+    int getContainers() const;
+
+    void setContainers(int Containers);
+
+    int getGas() const;
+
+    void setGas(int Gas);
+
+private:
 
     TypeIdShip myType;
 
