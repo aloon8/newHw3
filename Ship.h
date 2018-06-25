@@ -46,6 +46,8 @@ public:
 
     virtual void printStatus() const = 0;
 
+    void printMoveWay()const;
+
 protected:
 
     std::string name;

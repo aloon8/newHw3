@@ -19,7 +19,6 @@ typedef struct Point {
     Point(double x, double y);
     Point();
     double distance(const Point& p)const;
-
     void print() const;
     bool operator==(const Point& rhs);
 } Point;

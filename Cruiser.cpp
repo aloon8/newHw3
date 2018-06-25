@@ -50,7 +50,16 @@ void Cruiser::attack(std::weak_ptr<Ship> ship){
 }
 
 void Cruiser::printStatus() const {
-    cout << "Cruiser " << name << " at (" << trackBase.getPosition().x << ", "
-         << trackBase.getPosition().y << "), force: " << Force_of_attack << ", Moving on ";
+    cout << "Cruiser " << name << " at";
+    trackBase.getPosition().print();
+    cout << " force: " << Force_of_attack;
+    if(status == Ship::Status::MovingTo)
+        printMoveWay();
+    else if(status == Ship::Status::Stopped)
+        cout << "Stopped";
+    else if(status == Ship::Status::DeadInTheWater)
+        cout << "Dead in the water";
+    else
+        cout << "Docked at " << trackBase.getPort().lock()->getPortName();
 
 }

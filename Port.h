@@ -20,7 +20,33 @@ public:
 
     }
 
+    const string &getPortName() const {
+        return portName;
+    }
 
+    void setPortName(const string &portName) {
+        Port::portName = portName;
+    }
+
+    const Point &getPosition() const {
+        return position;
+    }
+
+    void setPosition(const Point &position) {
+        Port::position = position;
+    }
+
+    int getGasStoke() const {
+        return gasStoke;
+    }
+
+    void setGasStoke(int gasStoke) {
+        Port::gasStoke = gasStoke;
+    }
+
+    const int getProduce() const {
+        return produce;
+    }
 
 private:
     std::string portName;

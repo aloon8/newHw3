@@ -19,3 +19,17 @@ void Ship::setStatus(Ship::Status status) {
     Ship::status = status;
 }
 
+void Ship::printMoveWay() const {
+    if(trackBase.getMovingWay() == TrackBase::MovingType::PointDest){
+        cout << "Moving to ";
+        trackBase.getDestination().print();
+        cout << " on course";
+    }
+    else if(trackBase.getMovingWay() == TrackBase::MovingType::ByPort){
+        cout << "Moving to " << trackBase.getPort().lock()->getPortName()<< " on course";
+    }
+    else if(trackBase.getMovingWay() == TrackBase::MovingType::Angle){
+        cout << "Moving on course " << trackBase.getAngle();
+    }
+}
+
