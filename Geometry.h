@@ -18,6 +18,7 @@ typedef struct Point {
     double y;
     Point(double x, double y);
     Point();
+    double printAngle(const Point& p)const;
     double distance(const Point& p)const;
     void print() const;
     bool operator==(const Point& rhs);
