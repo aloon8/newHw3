@@ -25,7 +25,7 @@ public:
 
     void update() {}
 
-    void printStatus() const {}
+    void printStatus() const;
 private:
     int Force_of_attack, range;
 

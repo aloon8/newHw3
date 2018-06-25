@@ -6,3 +6,11 @@
 
 PatrolBoat::PatrolBoat(const std::string& shipName, const Point& pos, int Resistance) : Ship(shipName, pos), Resistance(Resistance),myType(PB){}
 
+int PatrolBoat::getResistance() const {
+    return Resistance;
+}
+
+void PatrolBoat::setResistance(int Resistance) {
+    PatrolBoat::Resistance = Resistance;
+}
+

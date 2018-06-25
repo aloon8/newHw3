@@ -31,6 +31,12 @@ public:
 private:
 
     int Resistance,index,numOfMoves;
+public:
+    int getResistance() const;
+
+    void setResistance(int Resistance);
+
+private:
 
     TypeIdShip myType;
 
