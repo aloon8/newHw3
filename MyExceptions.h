@@ -12,10 +12,10 @@ using namespace std;
 class MyExceptions {
 public:
 
-    class ProblemWithArguments{
+    class InvalidArgument{
     public:
         const std::string s;
-        ProblemWithArguments(const string& str): s(str) {}
+        InvalidArgument(const string& str): s(str) {}
         void print() const { cout << s << endl;}
     };
 

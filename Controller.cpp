@@ -17,7 +17,9 @@ int Controller::hashing(std::string name){
 }
 
 void Controller::run() {
-    std::string command, line,tmp, name;
+    std::string command, line,tmp, name, shipType;
+    double x,y;
+    int resOatt, rangeOcap;
     std::vector<string> inputStringVector;
 
     enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214,
@@ -72,12 +74,28 @@ void Controller::run() {
                     if(command != "create")
                         throw MyExceptions::InvalidInput("Command not found");
                     if(inputStringVector.size() < 5 || inputStringVector.size() > 6)
-                        throw MyExceptions::ProblemWithArguments("Create needs 5 or 6 arguments");
-                    name = inputStringVector[1]; // ship's name
+                        throw MyExceptions::InvalidArgument("Create needs 5 or 6 arguments");
+                    ss >> name;
                     if(Model::getInstance().findShip(name) == Model::getInstance().getShipVec().end()) // checks if the ship a lready exists
                         throw MyExceptions::InvalidInput("Ship already exists");
-                    if()
+
+                    if(inputStringVector[2] != "Cruiser" && inputStringVector[2] != "Freighter" && inputStringVector[2] != "Patrol_boat")
+                        throw MyExceptions::InvalidInput("No such type of ship");
+                    inputStringVector[3].erase(inputStringVector[3].begin(),inputStringVector[3].begin() + 1); // erasing '(' from double
+                    inputStringVector[4].pop_back();
+                    x = std::stod(inputStringVector[3]); //throws invalid_argument of c++ if fails
+                    y = std::stod(inputStringVector[4]); //throws invalid_argument of c++ if fails
+                    Point p(x,y);
+                    resOatt = std::stoi(inputStringVector[5]);
+                    if(name != "Patrol_boat"){
+                        rangeOcap = std::stoi(inputStringVector[6]);
+                        Model::getInstance().getShipFactory()->getShip(name,inputStringVector[2],p,resOatt,rangeOcap);
+                    }else
+                        Model::getInstance().getShipFactory()->getShip(name,inputStringVector[2],p,resOatt);
+
+
                         break;
+
 
 
                     case COURSE:
@@ -119,10 +137,12 @@ void Controller::run() {
 
                 } // switch
             } //while
-        }catch (MyExceptions::InvalidCommand& ic) {
-            ic.print();
-        }catch (MyExceptions::ProblemWithArguments& pa){
+        }catch (MyExceptions::InvalidInput& ii) {
+            ii.print();
+        }catch (MyExceptions::InvalidArgument& pa){
             pa.print();
+        }catch(std::invalid_argument& e) {
+            cout << "Cannot parse a string that is not a number to a double\n"; // occurs when trying to parse a string into a double but fails (in function create)
         }
 
     } // function run()
