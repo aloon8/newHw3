@@ -18,12 +18,13 @@ int Controller::hashing(std::string name){
 
 void Controller::run() {
     std::string command, line,tmp, name, shipType;
+    Point p;
     double x,y;
     int resOatt, rangeOcap;
     std::vector<string> inputStringVector;
 
-    enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214,
-        CREATE = 628, COURSE = 657, POSITION = 885, DESTINATION = 1186, LOAD_AT = 724, UNLOAD_AT = 951, DOCK_AT = 725, ATTACK = 632, REFUEL = 643, STOP = 454 };
+    typedef  enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214,
+        CREATE = 628, COURSE = 657, POSITION = 885, DESTINATION = 1186, LOAD_AT = 724, UNLOAD_AT = 951, DOCK_AT = 725, ATTACK = 632, REFUEL = 643, STOP = 454 } InputCommand;
 
     try{
         while(true){
@@ -85,20 +86,19 @@ void Controller::run() {
                     inputStringVector[4].pop_back();
                     x = std::stod(inputStringVector[3]); //throws invalid_argument of c++ if fails
                     y = std::stod(inputStringVector[4]); //throws invalid_argument of c++ if fails
-                    Point p(x,y);
+                    p.x = x;
+                    p.y = y;
                     resOatt = std::stoi(inputStringVector[5]);
                     if(name != "Patrol_boat"){
                         rangeOcap = std::stoi(inputStringVector[6]);
                         Model::getInstance().getShipFactory()->getShip(name,inputStringVector[2],p,resOatt,rangeOcap);
                     }else
                         Model::getInstance().getShipFactory()->getShip(name,inputStringVector[2],p,resOatt);
-
-
-                        break;
+                    break;
 
 
 
-                    case COURSE:
+                case InputCommand::COURSE:
                         break;
 
 

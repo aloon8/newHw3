@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <sstream>
 #include "Model.h"
+#include "Geometry.h"
 #include "MyExceptions.h"
 
 class Controller {
