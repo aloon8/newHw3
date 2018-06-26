@@ -63,7 +63,9 @@ void PatrolBoat::docked() {
             case 2:
                 setStatus(Ship::Status::MovingTo);
                 trackBase.setMovingWay(TrackBase::ByPort);
-                givesTheCloserPort();
+                auto closePort = givesTheCloserPort();
+                if(closePort.lock() == nullptr)
+                    cout << "the boat finish"
                 trackBase.setPort();
                 break;
         }
