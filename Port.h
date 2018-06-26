@@ -50,7 +50,7 @@ public:
 
 private:
     std::string portName;
-    queue<weak_ptr<class Ship>> queue;
+    queue<weak_ptr<class Ship>> myQueue;
     Point position;
     int gasStoke;
     const int produce;
