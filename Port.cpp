@@ -7,3 +7,7 @@
 void Port::update(){
 
 }
+
+void Port::printStatus() {
+
+}

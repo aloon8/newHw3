@@ -42,4 +42,11 @@ int Model::getTime() const {
     return time;
 }
 
+void Model::printAllObjectsStatus() {
+    for (auto tmpPort : portVec)
+        tmpPort->printStatus();
+    for(auto tmpShip : shipVec)
+        tmpShip->printStatus();
+}
+
 

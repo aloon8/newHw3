@@ -31,6 +31,8 @@ public:
 
     void addShip( const string& shipType ,const string& shipName , Point& pos, int resOatt, int rangeOcap = 0 );
 
+    void printAllObjectsStatus();
+
     int getSizeOfPortVector(){return (int)portVec.size();}
 
     ~Model(){}

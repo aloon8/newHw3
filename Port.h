@@ -22,6 +22,8 @@ public:
 
     void update();
 
+    void printStatus();
+
     friend bool operator==(std::weak_ptr<Port> port1 ,std::weak_ptr<Port> port2){
         return port1.lock()->portName==port2.lock()->portName;
     }
