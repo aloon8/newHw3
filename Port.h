@@ -20,6 +20,8 @@ public:
 
     }
 
+    bool insertToGasQueue(std::weak_ptr<class Ship> ship);
+
     void update();
 
     void printStatus();

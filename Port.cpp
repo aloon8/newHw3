@@ -11,3 +11,10 @@ void Port::update(){
 void Port::printStatus() {
 
 }
+
+bool Port::insertToGasQueue(std::weak_ptr<class Ship> ship) {
+    if(shipQueue.empty())
+        return true;
+    shipQueue.push(ship);
+    return false;
+}

@@ -52,21 +52,26 @@ void PatrolBoat::update() {
 
 void PatrolBoat::docked() {
     if(status == Ship::Status::Docked) {
-        switch (index) {
+        switch (numOfMoves) {
             case 0:
+                if(!trackBase.getPort().lock()->insertToGasQueue(make_shared(this))){
 
+                }
 
                 break;
             case 1:
-                index++;
+                numOfMoves++;
                 break;
             case 2:
                 setStatus(Ship::Status::MovingTo);
                 trackBase.setMovingWay(TrackBase::ByPort);
                 auto closePort = givesTheCloserPort();
-                if(closePort.lock() == nullptr)
-                    cout << "the boat finish"
-                trackBase.setPort();
+                if(closePort.lock() == nullptr) {
+                    cout << "The boat: " << name << "finished it's round" << endl;
+                    return;
+                }
+                trackBase.setPort(closePort);
+                numOfMoves = 0;
                 break;
         }
     }
@@ -91,12 +96,8 @@ std::weak_ptr<Port> PatrolBoat::givesTheCloserPort() {
                 trackBase.getPosition().distance(vectOfPorts[i]->getPosition()) ){
             theClosePort = vectOfPorts[i];
         }
-        return theClosePort;
     }
-
-
-
-    return weak_ptr<Port>();
+    return theClosePort;
 }
 
 
