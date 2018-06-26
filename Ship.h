@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <memory>
+#include <iomanip>
 #include "TrackBase.h"
 
 
@@ -48,21 +49,20 @@ public:
 
     void printMoveWay()const;
 
+    const TrackBase &getTrackBase() const;
+
+    Status getStatus() const;
+
+    void setStatus(Status status);
+
 protected:
 
     std::string name;
 
-public:
-    const TrackBase &getTrackBase() const;
-
-protected:
     TrackBase trackBase;
 
     Status status;
-public:
-    Status getStatus() const;
 
-    void setStatus(Status status);
 };
 
 
