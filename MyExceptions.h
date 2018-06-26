@@ -14,16 +14,16 @@ public:
 
     class ProblemWithArguments{
     public:
-        std::string s;
+        const std::string s;
         ProblemWithArguments(const string& str): s(str) {}
-        void print() { cout << s << endl;}
+        void print() const { cout << s << endl;}
     };
 
-    class InvalidCommand{
+    class InvalidInput{
     public:
-        std::string s;
-        InvalidCommand(const string& str) : s(str) { }
-        void print() {cout << s << endl;}
+        const std::string s;
+        InvalidInput(const string& str) : s(str) { }
+        void print() const {cout << s << endl;}
     };
 
 };

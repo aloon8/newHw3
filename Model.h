@@ -35,6 +35,12 @@ public:
 
     int getSizeOfPortVector(){return (int)portVec.size();}
 
+    const vector<shared_ptr<Ship>> &getShipVec() const;
+
+    const shared_ptr<AbstractFactory> &getShipFactory() const;
+
+    std::vector<shared_ptr<Ship>>::iterator findShip(string& name);
+
     ~Model(){}
 
 

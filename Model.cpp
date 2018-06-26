@@ -49,4 +49,22 @@ void Model::printAllObjectsStatus() {
         tmpShip->printStatus();
 }
 
+const vector<shared_ptr<Ship>> &Model::getShipVec() const {
+    return shipVec;
+}
+
+const shared_ptr<AbstractFactory> &Model::getShipFactory() const {
+    return shipFactory;
+}
+
+std::vector<shared_ptr<Ship>>::iterator Model::findShip(string &name) {
+    auto beg = shipVec.begin();
+    auto end = shipVec.end();
+    while(beg != end) {
+        if((*beg)->getName() == name)
+            return beg;
+    }
+    return beg;
+}
+
 

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 #include "Model.h"
 #include "MyExceptions.h"
 
@@ -17,7 +18,7 @@ public:
     void run();
 
 private:
-    int hashing(const std::string&);
+    int hashing(std::string);
 
 
 };
