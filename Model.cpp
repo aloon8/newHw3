@@ -17,7 +17,7 @@ Model& Model::getInstance() {
 
 Model::Model() : time(0) {
     Point p(50,5);
-    portVec.emplace_back(new Port("Nagoya",p,1000000,1000));
+    portVec.emplace_back(make_shared<Port>("Nagoya",p,1000000,1000));
     shipFactory = std::make_shared<ShipFactory>();
 }
 

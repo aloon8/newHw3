@@ -54,9 +54,9 @@ void PatrolBoat::docked() {
     if(status == Ship::Status::Docked) {
         switch (numOfMoves) {
             case 0:
-                if(!trackBase.getPort().lock()->insertToGasQueue(make_shared(this))){
-
-                }
+//                if(!trackBase.getPort().lock()->insertToGasQueue(make_shared(this))){
+//
+//                }
 
                 break;
             case 1:

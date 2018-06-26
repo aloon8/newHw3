@@ -9,7 +9,7 @@ using namespace std;
 
 int Controller::hashing(const std::string& name){
     int cnt = 0;
-    std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+    //std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 
     for (unsigned int i = 0; i < name.size(); ++i)
         cnt += name[i];
@@ -47,6 +47,9 @@ void Controller::run() {
 
 
                         case STATUS:
+                            if(command != "status"){
+                                throw MyExceptions::InvalidCommand("Command not found");
+                            }
                          Model::getInstance().printAllObjectsStatus();
                              break;
 
@@ -94,13 +97,13 @@ void Controller::run() {
 
                         case STOP:
                             break;
+                    default:
+                        cout << "Command not found\n";
 
                     } // switch
                 } //while
-            }catch (runtime_error& e) {
-
-            }catch (invalid_argument &e){
-
+            }catch (MyExceptions::InvalidCommand& ic) {
+            ic.print();
             }
 
     } // function run()

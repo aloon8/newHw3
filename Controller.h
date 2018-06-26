@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include "Model.h"
+#include "MyExceptions.h"
 
 class Controller {
 
