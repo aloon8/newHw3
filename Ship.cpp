@@ -23,16 +23,16 @@ void Ship::printMoveWay() const {
     if(trackBase.getMovingWay() == TrackBase::MovingType::PointDest){
         cout << "Moving to ";
         trackBase.getDestination().print();
-        cout << " on course " << setprecision(2) << trackBase.getPosition().printAngle(trackBase.getDestination())
-             << " deg, speed " << trackBase.getSpeed() << " nm/hr, ";
+        cout << " on course " << fixed << trackBase.getPosition().printAngle(trackBase.getDestination())
+             << " deg, speed " << trackBase.getSpeed() << " nm/hr ";
     }
     else if(trackBase.getMovingWay() == TrackBase::MovingType::ByPort){
         cout << "Moving to " << trackBase.getPort().lock()->getPortName()<< " on course"<< setprecision(2)
              << trackBase.getPosition().printAngle(trackBase.getPort().lock()->getPosition()) << " deg, speed "
-             << trackBase.getSpeed() << " nm/hr, ";
+             << trackBase.getSpeed() << " nm/hr ";
     }
     else if(trackBase.getMovingWay() == TrackBase::MovingType::Angle){
-        cout << "Moving on course " << trackBase.getAngle() << " deg, speed " << trackBase.getSpeed() << " nm/hr, ";
+        cout << "Moving on course " << trackBase.getAngle() << " deg, speed " << trackBase.getSpeed() << " nm/hr ";
     }
 }
 

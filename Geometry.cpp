@@ -87,7 +87,8 @@ bool Point::operator==(const Point & rhs)
 double Point::printAngle(const Point& p) const {
     /* atan2 will return a negative angle for Quadrant III, IV, must translate to I, II */
     double theta = atan2(p.y - y,p.x - x) * 180 / pi;
+
     if (theta < 0.)
-        theta = 360. + theta; // normalize theta positive
+        theta += 360.0; // normalize theta positive
     return theta;
 }
