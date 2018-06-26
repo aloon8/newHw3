@@ -16,11 +16,14 @@ public:
 
     PatrolBoat(const std::string& shipName, const Point& pos, int Resistance);
 
+    virtual void Moving(weak_ptr<class Port> port, int speed);
+
     void update(){}
 
     void printStatus() const {}
 
-    void get(){ Model::getInstance().getPortVec();}
+    const vector<shared_ptr<Port>>& get()const{ return Model::getInstance().getPortVec();}
+
 
     virtual TypeIdShip getTypeName(){ return myType;}
 
@@ -28,19 +31,18 @@ public:
     static const int MAX_GAS_PATROL = 500000;
     static const int GAS_USE_PER_NM_PATROL = 2000;
 
-private:
-
-    int Resistance,index,numOfMoves;
-public:
     int getResistance() const;
+
+    void currentMove();
 
     void setResistance(int Resistance);
 
 private:
+    int Resistance,index,numOfMoves;
 
     TypeIdShip myType;
 
-    bool visitedPorts[];
+    vector<bool> visitedPorts;
 
 
 };

@@ -31,7 +31,7 @@ public:
 //
 //    virtual void DeadInWater();
 //
-     // virtual void Moving(weak_ptr<class Port> port, int speed);
+      virtual void Moving(weak_ptr<class Port> port, int speed){}
 //
       virtual void Moving(Point& point, int speed){}
 
