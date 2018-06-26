@@ -17,6 +17,9 @@ void PatrolBoat::setResistance(int Resistance) {
 }
 
 void PatrolBoat::Moving(weak_ptr<class Port> port, int speed) {
+    if(status == Ship::Status::MovingTo || status == Ship::Status::DeadInTheWater){
+        //throw canot do this move
+    }
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::ByPort);
     trackBase.setPort(port);
@@ -32,7 +35,66 @@ void PatrolBoat::Moving(weak_ptr<class Port> port, int speed) {
     index = i;
 }
 
-void PatrolBoat::currentMove() {
+void PatrolBoat::update() {
+    if(status == Ship::Status::Docked){
+        docked();
+    }
+    else if(status == Ship::Status::MovingTo){
+        stepOnWater();
+        Point p1 =  trackBase.getPosition();
+        Point p2 =  trackBase.getPort().lock()->getPosition();
+        if(p1 == p2){
+            setStatus(Ship::Status::Docked);
+        }
+    }
 
 }
+
+void PatrolBoat::docked() {
+    if(status == Ship::Status::Docked) {
+        switch (index) {
+            case 0:
+
+
+                break;
+            case 1:
+                index++;
+                break;
+            case 2:
+                setStatus(Ship::Status::MovingTo);
+                trackBase.setMovingWay(TrackBase::ByPort);
+                givesTheCloserPort();
+                trackBase.setPort();
+                break;
+        }
+    }
+}
+
+void PatrolBoat::stepOnWater() {
+
+}
+
+std::weak_ptr<Port> PatrolBoat::givesTheCloserPort() {
+    auto vectOfPorts = Model::getInstance().getPortVec();
+    std::shared_ptr<Port> theClosePort(nullptr);
+
+    for(int i=0; i<vectOfPorts.size(); i++){
+        if(visitedPorts[i] == true){
+            continue;
+        }
+        if(theClosePort == nullptr){
+            theClosePort = vectOfPorts[i];
+        }
+        if(trackBase.getPosition().distance(theClosePort->getPosition()) >
+                trackBase.getPosition().distance(vectOfPorts[i]->getPosition()) ){
+            theClosePort = vectOfPorts[i];
+        }
+        return theClosePort;
+    }
+
+
+
+    return weak_ptr<Port>();
+}
+
 

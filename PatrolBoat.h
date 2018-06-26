@@ -18,12 +18,17 @@ public:
 
     virtual void Moving(weak_ptr<class Port> port, int speed);
 
-    void update(){}
+    virtual void update();
 
-    void printStatus() const {}
+    virtual void printStatus() const {}
 
     const vector<shared_ptr<Port>>& get()const{ return Model::getInstance().getPortVec();}
 
+    void docked();
+
+    void stepOnWater();
+
+    std::weak_ptr<Port> givesTheCloserPort();
 
     virtual TypeIdShip getTypeName(){ return myType;}
 
@@ -32,8 +37,6 @@ public:
     static const int GAS_USE_PER_NM_PATROL = 2000;
 
     int getResistance() const;
-
-    void currentMove();
 
     void setResistance(int Resistance);
 
