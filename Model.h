@@ -9,6 +9,7 @@
 #include <vector>
 #include <memory>
 #include "AbstractFactory.h"
+
 #include "Ship.h"
 
 
@@ -16,11 +17,17 @@ class Model {
 public:
     //void create(string shipName, TrackBase::MovingType type, const Point& pos, int resOatt, int rangeOcap = 0 );
 
-    Model(){}
+    Model();
 
     const vector<shared_ptr<Port>> &getPortVec() const;
 
     static Model& getInstance(); // Singleton
+
+    void update();
+
+    int getSizeOfPortVector(){return (int)portVec.size();}
+
+    ~Model(){}
 
 
 private:
@@ -28,7 +35,9 @@ private:
 
     std::vector<shared_ptr<Port>> portVec;
 
-    AbstractFactory* shipFactory;
+    std::shared_ptr<AbstractFactory> shipFactory;
+
+    int time;
 };
 
 

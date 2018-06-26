@@ -20,6 +20,8 @@ public:
 
     }
 
+    void update(;
+
     const string &getPortName() const {
         return portName;
     }
@@ -50,7 +52,7 @@ public:
 
 private:
     std::string portName;
-    queue<weak_ptr<class Ship>> myQueue;
+    queue<weak_ptr<class Ship>> shipQueue;
     Point position;
     int gasStoke;
     const int produce;
