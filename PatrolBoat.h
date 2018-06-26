@@ -22,7 +22,7 @@ public:
 
     virtual void printStatus() const {}
 
-    const vector<shared_ptr<Port>>& get()const{ return Model::getInstance().getPortVec();}
+    const vector<shared_ptr<Ship>>& getVecShip()const{ return Model::getInstance().getShipVec();}
 
     void docked();
 
@@ -46,6 +46,8 @@ private:
     TypeIdShip myType;
 
     vector<bool> visitedPorts;
+
+    bool existInQueueGas;
 
 
 };

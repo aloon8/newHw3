@@ -4,7 +4,8 @@
 
 #include "PatrolBoat.h"
 
-PatrolBoat::PatrolBoat(const std::string& shipName, const Point& pos, int Resistance) : Ship(shipName, pos), Resistance(Resistance),myType(PB){
+PatrolBoat::PatrolBoat(const std::string& shipName, const Point& pos, int Resistance) :
+        Ship(shipName, pos), Resistance(Resistance),myType(PB),existInQueueGas(false){
     visitedPorts.insert(visitedPorts.begin(),Model::getInstance().getSizeOfPortVector(),false);
 }
 
@@ -54,10 +55,7 @@ void PatrolBoat::docked() {
     if(status == Ship::Status::Docked) {
         switch (numOfMoves) {
             case 0:
-//                if(!trackBase.getPort().lock()->insertToGasQueue(make_shared(this))){
-//
-//                }
-
+                if(trackBase.getPort().lock()->insertToGasQueue(Model::getInstance().findShip(name)))
                 break;
             case 1:
                 numOfMoves++;

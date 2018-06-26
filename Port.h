@@ -6,8 +6,9 @@
 #define EXERCISE3_PORT_H
 
 #include <iostream>
-#include <queue>
 #include <memory>
+#include <vector>
+#include <list>
 #include "Geometry.h"
 
 
@@ -20,7 +21,7 @@ public:
 
     }
 
-    bool insertToGasQueue(std::weak_ptr<class Ship> ship);
+    bool insertToGasQueue(std::vector<shared_ptr<class Ship>>::iterator it);
 
     void update();
 
@@ -60,7 +61,7 @@ public:
 
 private:
     std::string portName;
-    queue<weak_ptr<class Ship>> shipQueue;
+    list<weak_ptr<Ship>> shipQueue;
     Point position;
     int gasStoke;
     const int produce;

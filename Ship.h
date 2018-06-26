@@ -20,6 +20,11 @@ public:
 
     Ship(const std::string& name,const Point& point, const Status& status = Status::Stopped );
 
+    friend bool operator==(std::shared_ptr<Ship> s1, const Ship& s2){return s1->name == s2.name;}
+    //friend bool operator==(const Ship& s1 , std::weak_ptr<Ship> s2)const {return s1.name == s2.lock()->name;}
+
+
+
     virtual TypeIdShip getTypeName()=0;
 //    void Stop();
 //
