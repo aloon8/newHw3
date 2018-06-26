@@ -20,7 +20,7 @@ public:
 
     }
 
-    void update(;
+    void update();
 
     const string &getPortName() const {
         return portName;

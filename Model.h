@@ -19,11 +19,17 @@ public:
 
     Model();
 
+    int getTime() const;
+
     const vector<shared_ptr<Port>> &getPortVec() const;
 
     static Model& getInstance(); // Singleton
 
     void update();
+
+    void addPort(const std::string portName,const Point& pos, const int GasStoke, const int produce);
+
+    void addShip( const string& shipType ,const string& shipName const, Point& pos, int resOatt, int rangeOcap = 0 );
 
     int getSizeOfPortVector(){return (int)portVec.size();}
 

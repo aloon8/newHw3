@@ -22,11 +22,24 @@ Model::Model() : time(0) {
 }
 
 void Model::update() {
+    time++; // incrementing time every update
     for (int i = 0; i < portVec.size(); ++i)
         portVec[i]->update();
     for (int i = 0; i < shipVec.size(); ++i) {
         shipVec[i]->update();
     }
+}
+
+void Model::addPort(const string portName, const Point &pos, const int GasStoke, const int produce) {
+    portVec.emplace_back(new Port(portName,pos,GasStoke,produce));
+}
+
+void Model::addShip(const string &shipType, const string &shipName, Point &pos, int resOatt, int rangeOcap) {
+    shipVec.emplace_back(shipFactory->getShip(shipType,shipName,pos,resOatt,rangeOcap));
+}
+
+int Model::getTime() const {
+    return time;
 }
 
 
