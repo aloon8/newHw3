@@ -11,7 +11,7 @@
 
 class AbstractFactory {
 public:
-    virtual std::shared_ptr<class Ship> getShip(const string& shipType ,const string& shipName const, Point& pos, int resOatt, int rangeOcap = 0 ) = 0;
+    virtual std::shared_ptr<class Ship> getShip(const string& shipType ,const string& shipName, Point& pos, int resOatt, int rangeOcap = 0 ) = 0;
 };
 
 

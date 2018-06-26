@@ -29,7 +29,7 @@ public:
 
     void addPort(const std::string portName,const Point& pos, const int GasStoke, const int produce);
 
-    void addShip( const string& shipType ,const string& shipName const, Point& pos, int resOatt, int rangeOcap = 0 );
+    void addShip( const string& shipType ,const string& shipName , Point& pos, int resOatt, int rangeOcap = 0 );
 
     int getSizeOfPortVector(){return (int)portVec.size();}
 

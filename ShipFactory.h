@@ -15,7 +15,7 @@
 
 class ShipFactory : public AbstractFactory{
 public:
-    std::shared_ptr<Ship> getShip( const string& shipType ,const string& shipName const, Point& pos, int resOatt, int rangeOcap = 0 ){
+    std::shared_ptr<Ship> getShip( const string& shipType ,const string& shipName, Point& pos, int resOatt, int rangeOcap = 0 ){
         shared_ptr<Ship> nwShip(nullptr);
         if(shipType == "Cruiser"){
             nwShip = std::shared_ptr<Ship>(new Cruiser(shipName,pos,resOatt,rangeOcap));
