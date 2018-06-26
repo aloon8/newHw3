@@ -9,7 +9,7 @@
 
 
 Freighter::Freighter(std::string shipName, const Point& pos,int Resistance,int Containers) : Ship(shipName, pos)
-        , Resistance(Resistance), Containers(Containers), Gas(MAX_GAS_FREIGHTER), myType(FR), loadSatus(LoadingStatus::NotLoadOrUnload){}
+        , Resistance(Resistance), Containers(Containers), Gas(MAX_GAS_FREIGHTER), myType(FR), loadStatus(LoadingStatus::NotLoadOrUnload){}
 
 int Freighter::getResistance() const {
     return Resistance;
