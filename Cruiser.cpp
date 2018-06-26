@@ -61,5 +61,4 @@ void Cruiser::printStatus() const {
         cout << "Dead in the water";
     else
         cout << "Docked at " << trackBase.getPort().lock()->getPortName();
-
 }

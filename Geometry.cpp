@@ -30,6 +30,9 @@ void Cartesian_vector::operator=(const Polar_vector& pv)
     delta_x = pv.r * cos(pv.theta);
     delta_y = pv.r * sin(pv.theta);
 }
+
+
+
 // construct a Polar_vector from a Cartesian_vector
 Polar_vector::Polar_vector(const Cartesian_vector& cv) {
     r = sqrt((cv.delta_x * cv.delta_x) + (cv.delta_y * cv.delta_y));
@@ -51,6 +54,8 @@ void Polar_vector::operator=(const Cartesian_vector& cv)
     if (theta < 0.)
         theta = 2. * pi + theta; // normalize theta positive
 }
+
+
 
 Point::Point(double x, double y) : x(x), y(y)
 {
@@ -77,4 +82,12 @@ void Point::print() const
 bool Point::operator==(const Point & rhs)
 {
     return x == rhs.x && y == rhs.y;
+}
+
+double Point::printAngle(const Point& p) const {
+    /* atan2 will return a negative angle for Quadrant III, IV, must translate to I, II */
+    double theta = atan2(p.y - y,p.x - x) * 180 / pi;
+    if (theta < 0.)
+        theta = 360. + theta; // normalize theta positive
+    return theta;
 }
