@@ -11,7 +11,7 @@
 class Freighter : public Ship {
 public:
 
-    typedef enum {NotLoadOrUnload, Loading, Unloading} LoadingStatus;
+    //typedef enum {NotLoadOrUnload, Loading, Unloading} LoadingStatus;
 
     Freighter(std::string shipName, const Point& pos,int Resistance,int Containers);
 
@@ -25,6 +25,10 @@ public:
 
     virtual void Moving(weak_ptr<class Port> port, int speed);
 
+    virtual void Moving(Point &point, int speed);
+
+    virtual void Moving(double angle, int speed);
+
     void docked();//when the ship is docked
 
     void dock(std::weak_ptr<Port> port);//when the ship in radius 0.1 from specific port
@@ -34,16 +38,10 @@ public:
     void unload_at(std::weak_ptr<Port> port, int containers);
 
 
-
-    //bool refuel();
-
     static const int MAX_GAS_FREIGHTER = 500000; // max gas that a freighter can contain
 
     virtual void refuelAfterQue();
 
-
-
-    static const int MAX_SPEED_FREIGHTER = 40; // max speed of freighter
 
     int getResistance() const;
 
@@ -61,12 +59,11 @@ public:
 
 private:
 
-
-
     int Resistance, Containers, Gas;
+
     TypeIdShip myType;
 
-    LoadingStatus loadStatus;
+    //LoadingStatus loadStatus;
 
     const int maxContainers;
 

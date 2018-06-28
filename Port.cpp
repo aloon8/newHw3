@@ -5,12 +5,17 @@
 #include <vector>
 #include "Port.h"
 #include "Ship.h"
+#include "PatrolBoat.h"
 
 
 void Port::update(){
     gasStoke += produce;
-
-
+    std::weak_ptr<Ship> ship();
+    if(!shipQueue.empty()) {
+        std::weak_ptr<Ship> ship = shipQueue.front();
+        ship.lock()->refuelAfterQue();
+        shipQueue.pop_front();
+    }
 }
 
 void Port::printStatus() {
@@ -22,13 +27,6 @@ void Port::insertToGasQueue(std::vector<shared_ptr<Ship>>::iterator it) {
 
 }
 
-bool Port::firstInQue(std::vector<shared_ptr<class Ship>>::iterator it) {
-    if((*it) == shipQueue.front()){
-        shipQueue.pop_front();
-        return true;
-    }
-    return false;
-}
 
 
 

@@ -13,8 +13,6 @@ class Cruiser : public Ship{
 public:
     Cruiser(std::string shipName, const Point& pos, int resOatt, int rangeOcap );
 
-    static const int MAX_SPEED_Cruiser = 75;
-
     virtual TypeIdShip getTypeName(){ return myType;}
 
     virtual void attack(std::weak_ptr<Ship> ship);

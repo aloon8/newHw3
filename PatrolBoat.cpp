@@ -5,7 +5,7 @@
 #include "PatrolBoat.h"
 
 PatrolBoat::PatrolBoat(const std::string& shipName, const Point& pos, int Resistance) :
-        Ship(shipName, pos), Resistance(Resistance),Gas(MAX_GAS_PATROL),myType(PB){
+        Ship(shipName, pos), Resistance(Resistance),Gas(MAX_GAS_PATROL),myType(PB),indexOfFirstPort(-1),numOfMoves(3){
     visitedPorts.insert(visitedPorts.begin(),Model::getInstance().getSizeOfPortVector(),false);
 }
 
@@ -17,18 +17,53 @@ void PatrolBoat::setResistance(int Resistance) {
     PatrolBoat::Resistance = Resistance;
 }
 
+void PatrolBoat::Moving(Point &point, int speed) {
+    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == DeadInTheWater){
+        //throw canot do this move
+    }
+    if(status == Docked && (existInQueueGas || numOfMoves != 3)){
+        //the ship in gas queue or in a round
+    }
+
+    setStatus(Ship::Status::MovingTo);
+    trackBase.setMovingWay(TrackBase::PointDest);
+    trackBase.setDestination(point);
+    trackBase.setSpeed(speed);
+}
+
+void PatrolBoat::Moving(double angle, int speed) {
+    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort)|| status == DeadInTheWater){
+        //throw canot do this move
+    }
+    if(status == Docked && (existInQueueGas || numOfMoves != 3)){
+        //the ship in gas queue or in a round
+
+    }
+
+    setStatus(Ship::Status::MovingTo);
+    trackBase.setMovingWay(TrackBase::Angle);
+    trackBase.setAngle(angle);
+    trackBase.setSpeed(speed);
+}
+
 void PatrolBoat::Moving(weak_ptr<class Port> port, int speed) {
     if((status == Ship::Status::MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == Ship::Status::DeadInTheWater){
         //throw canot do this move
     }
-    setStatus(Ship::Status::MovingTo);
-    trackBase.setMovingWay(TrackBase::ByPort);
-    trackBase.setPort(port);
-    trackBase.setSpeed(speed);
-    std::fill(visitedPorts.begin(),visitedPorts.end(),false);
-    int indexOfPort = givesIndexOfPort(port);
-    visitedPorts[indexOfPort] = true;
-    index = indexOfPort;
+    if(numOfMoves == 3) {
+        setStatus(Ship::Status::MovingTo);
+        trackBase.setMovingWay(TrackBase::ByPort);
+        trackBase.setPort(port);
+        trackBase.setSpeed(speed);
+        std::fill(visitedPorts.begin(), visitedPorts.end(), false);
+        indexOfFirstPort = givesIndexOfPort(port);
+        visitedPorts[indexOfFirstPort] = true;
+        index = indexOfFirstPort;
+        numOfMoves = 0;
+    }
+    else{
+        //canot do this move because the ship is in round
+    }
 }
 
 void PatrolBoat::update() {
@@ -46,10 +81,10 @@ void PatrolBoat::update() {
 }
 
 void PatrolBoat::docked() {
+    weak_ptr<Port> closePort;
     switch (numOfMoves) {
         case 0:
-            if(Ship::refuel())
-                numOfMoves++;
+            refuel();
             break;
         case 1:
             numOfMoves++;
@@ -57,18 +92,20 @@ void PatrolBoat::docked() {
         case 2:
             setStatus(Ship::Status::MovingTo);
             trackBase.setMovingWay(TrackBase::ByPort);
-            auto closePort = givesTheCloserPort();
-            if(closePort.lock() == nullptr) {
-                /*need to add return to the first port*/
-                //
-                //
-                cout << "The boat: " << name << "finished it's round" << endl;
+            closePort = givesTheCloserPort();
+            if(closePort.lock() == nullptr) {//this scope will be only when the ship finish round
+                auto FirstPort = Model::getInstance().getPortVec()[indexOfFirstPort];
+                trackBase.setPort(FirstPort);
+                numOfMoves++;
                 return;
             }
             trackBase.setPort(closePort);
-            int indexOfPort = givesIndexOfPort(closePort);
-            visitedPorts[indexOfPort] = true;
+            index = givesIndexOfPort(closePort);
+            visitedPorts[index] = true;
             numOfMoves = 0;
+            break;
+        case 3:
+            cout << "The boat: " << name << "finished it's round" << endl;
             break;
     }
 }
@@ -104,6 +141,8 @@ void PatrolBoat::refuelAfterQue() {
         Gas += x;
         port->setGasStoke(port->getGasStoke() - x);
     }
+    existInQueueGas = false;
+    numOfMoves++;
 }
 
 void PatrolBoat::printStatus() const {
@@ -142,5 +181,15 @@ void PatrolBoat::decreaseGas() {
         Gas = 0;
     }
 }
+
+int PatrolBoat::getNumOfMoves() const {
+    return numOfMoves;
+}
+
+void PatrolBoat::setNumOfMoves(int numOfMoves) {
+    PatrolBoat::numOfMoves = numOfMoves;
+}
+
+
 
 

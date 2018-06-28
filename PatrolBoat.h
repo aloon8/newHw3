@@ -18,6 +18,10 @@ public:
 
     virtual void Moving(weak_ptr<class Port> port, int speed);
 
+    virtual void Moving(Point &point, int speed);
+
+    virtual void Moving(double angle, int speed);
+
     virtual void update();
 
     virtual void printStatus() const;
@@ -32,15 +36,20 @@ public:
 
     int givesIndexOfPort(std::weak_ptr<Port> port);
 
+    std::weak_ptr<Port> givesPortByIndex();
+
     virtual TypeIdShip getTypeName(){ return myType;}
 
-    static const int MAX_SPEED_PATROL = 15;
     static const int MAX_GAS_PATROL = 500000;
     static const int GAS_USE_PER_NM_PATROL = 2000;
 
     int getResistance() const;
 
     void setResistance(int Resistance);
+
+    virtual int getNumOfMoves() const;
+
+    void setNumOfMoves(int numOfMoves);
 
 private:
     int Resistance,index,numOfMoves,Gas;
@@ -49,7 +58,7 @@ private:
 
     vector<bool> visitedPorts;
 
-    //bool existInQueueGas;
+    int indexOfFirstPort;
 
     //functions
     void decreaseGas();

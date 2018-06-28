@@ -20,5 +20,6 @@ int main() {
     cr1->printStatus();
     cr1->Moving(port1,20);
     cr1->update();
+    cr1->Moving(port1,20);
     cr1->printStatus();
 }

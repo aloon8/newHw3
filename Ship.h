@@ -48,7 +48,7 @@ public:
 
     virtual void refuelAfterQue(){}
 
-    bool refuel();
+    void refuel();
 
     inline std::string getName(){return name;}
 
@@ -64,6 +64,7 @@ public:
 
     void setStatus(Status status);
 
+    virtual int getNumOfMoves() const{}
 protected:
 
     std::string name;

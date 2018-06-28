@@ -28,7 +28,7 @@ void Ship::printMoveWay() const {
              << " deg, speed " << trackBase.getSpeed() << " nm/hr ";
     }
     else if(trackBase.getMovingWay() == TrackBase::MovingType::ByPort){
-        cout << "Moving to " << trackBase.getPort().lock()->getPortName()<< " on course "<< setprecision(2)
+        cout << "Moving to " << trackBase.getPort().lock()->getPortName()<< " on course "<< fixed
              << trackBase.getPosition().toAngle(trackBase.getPort().lock()->getPosition()) << " deg, speed "
              << trackBase.getSpeed() << " nm/hr ";
     }
@@ -38,12 +38,6 @@ void Ship::printMoveWay() const {
 }
 
 void Ship::Moving(Point &point, int speed) {
-    if((status == Ship::Status::MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == Ship::Status::DeadInTheWater){
-        //throw canot do this move
-    }
-    if(status == Docked && existInQueueGas){
-        //the ship in gas queue
-    }
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::PointDest);
     trackBase.setDestination(point);
@@ -51,14 +45,6 @@ void Ship::Moving(Point &point, int speed) {
 }
 
 void Ship::Moving(double angle, int speed) {
-    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort)|| status == DeadInTheWater){
-        //throw canot do this move
-    }
-    if(status == Docked && existInQueueGas){
-        //the ship in gas queue
-        // need to check if freighter ship dosent need unload or load
-    }
-
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::Angle);
     trackBase.setAngle(angle);
@@ -96,7 +82,7 @@ void Ship::stepOnWater() {
     }
 }
 
-bool Ship::refuel() {
+void Ship::refuel() {
     if (status != Ship::Status::Docked) {
         //throw ship dosent in docked
     }
@@ -107,12 +93,6 @@ bool Ship::refuel() {
         trackBase.getPort().lock()->insertToGasQueue(ship);
         existInQueueGas = true;
     }
-
-    if (trackBase.getPort().lock()->firstInQue(ship)) {//check if this ship is the first in queue
-        existInQueueGas = false;
-        refuelAfterQue();
-        return true;// the ship refueled
-    }
-    return false; // the ship doesn't first in queue
 }
+
 

@@ -10,9 +10,8 @@
 
 
 
-Freighter::Freighter(std::string shipName, const Point& pos,int Resistance,int Containers) : Ship(shipName, pos), Resistance(Resistance)
-        , Containers(Containers), Gas(MAX_GAS_FREIGHTER), myType(FR), loadStatus(LoadingStatus::NotLoadOrUnload)
-        , maxContainers(Containers){}
+Freighter::Freighter(std::string shipName, const Point& pos, int Resistance,int Containers) : Ship(shipName, pos), Resistance(Resistance)
+        , Containers(Containers), Gas(MAX_GAS_FREIGHTER), myType(FR), maxContainers(Containers){}
 
 int Freighter::getResistance() const {
     return Resistance;
@@ -51,6 +50,7 @@ void Freighter::update() {
     }
 }
 
+
 void Freighter::Moving(weak_ptr<class Port> port, int speed) {
     if((status == Ship::Status::MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == Ship::Status::DeadInTheWater){
     //throw canot do this move
@@ -58,16 +58,59 @@ void Freighter::Moving(weak_ptr<class Port> port, int speed) {
     }
     if(status == Docked){
         if(existInMissionQue()){
-            //she need to unload or load in this port
+            cout << "she need to unload or load in this port" << endl;
+            return;
         }
         else if(existInQueueGas) {
             cout << "the ship need rufuel" << endl; //the ship in gas queue
+            return;
         }
-        return;
     }
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::ByPort);
     trackBase.setPort(port);
+    trackBase.setSpeed(speed);
+}
+
+void Freighter::Moving(Point &point, int speed) {
+    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == DeadInTheWater){
+        //throw canot do this move
+    }
+    if(status == Docked){
+        if(existInMissionQue()){
+            cout << "she need to unload or load in this port" << endl;
+            return;
+        }
+        else if(existInQueueGas) {
+            cout << "the ship need rufuel" << endl; //the ship in gas queue
+            return;
+        }
+    }
+
+
+    setStatus(Ship::Status::MovingTo);
+    trackBase.setMovingWay(TrackBase::PointDest);
+    trackBase.setDestination(point);
+    trackBase.setSpeed(speed);
+}
+
+void Freighter::Moving(double angle, int speed) {
+    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort)|| status == DeadInTheWater){
+        //throw canot do this move
+    }
+    if(status == Docked){
+        if(existInMissionQue()){
+            cout << "she need to unload or load in this port" << endl;
+            return;
+        }
+        else if(existInQueueGas) {
+            cout << "the ship need rufuel" << endl; //the ship in gas queue
+            return;
+        }
+    }
+    setStatus(Ship::Status::MovingTo);
+    trackBase.setMovingWay(TrackBase::Angle);
+    trackBase.setAngle(angle);
     trackBase.setSpeed(speed);
 }
 
@@ -98,7 +141,7 @@ void Freighter::docked() {//when the ship docks
             stringstream iss{(*begin).second};
             int numOfContainers;
             iss >> numOfContainers;
-            if(numOfContainers > Containers){
+            if(numOfContainers >= Containers){
                 Containers = 0;
                 cout << "Warnings the ship " << name << "doesn't have enough containers to unload " << endl;
             }
@@ -141,13 +184,6 @@ void Freighter::printStatus() const {
         cout << "Docked at " << trackBase.getPort().lock()->getPortName();
     cout << " ,Containers: " << Containers << endl;
 
-    /*if(loadStatus == NotLoadOrUnload)
-        cout << "no cargo destination\n";
-    else if(loadStatus == Loading)
-        cout << "moving to loading destination\n";
-    else
-        cout << "moving to unloading destination\n";*/
-
 }
 
 void Freighter::refuelAfterQue() {
@@ -161,6 +197,7 @@ void Freighter::refuelAfterQue() {
         Gas += x;
         port->setGasStoke(port->getGasStoke() - x);
     }
+    existInQueueGas = false;
 }
 
 bool Freighter::existInMissionQue() {
