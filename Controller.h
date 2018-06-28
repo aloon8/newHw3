@@ -15,11 +15,16 @@
 class Controller {
 
 public:
+    Controller(int argc, char* argv[]);
 
     void run();
 
 private:
     int hashing(std::string);
+
+    inline bool isNumber(const std::string& s) {
+        return !s.empty() && std::find_if(s.begin(), s.end(), [](char c) { return !(std::isdigit(c) || c == '.');  }) == s.end();
+    }
 
 
 };

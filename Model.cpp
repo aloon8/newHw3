@@ -25,9 +25,8 @@ void Model::update() {
     time++; // incrementing time every update
     for (int i = 0; i < portVec.size(); ++i)
         portVec[i]->update();
-    for (int i = 0; i < shipVec.size(); ++i) {
+    for (int i = 0; i < shipVec.size(); ++i)
         shipVec[i]->update();
-    }
 }
 
 void Model::addPort(const string portName, const Point &pos, const int GasStoke, const int produce) {
@@ -65,6 +64,45 @@ std::vector<shared_ptr<Ship>>::iterator Model::findShip(string &name) {
             return beg;
     }
     return beg;
+}
+
+vector<vector<string>> &Model::getVectorOfCommands() {
+    return vectorOfCommands;
+}
+
+void Model::go() {
+    for (int i = 0; i < attackVector.size(); ++i) {
+        auto tmpVec = attackVector[i];
+        //attack
+    }
+    attackVector.clear();
+    for (int i = 0; i < vectorOfCommands.size(); ++i) {
+        auto tmpVector = vectorOfCommands[i];
+
+        if (tmpVector[0] == "go") {
+
+        }else if (tmpVector[0] == "course"){
+
+        }else if(tmpVector[0] == "position"){
+
+        }else if(tmpVector[0] == "destination"){
+
+        }else if(tmpVector[0] == "load_at"){
+
+        }else if(tmpVector[0] == "unload_at"){
+
+        }else if(tmpVector[0] == "dock_at"){
+
+        }else if(tmpVector[0] == "refuel"){
+
+        }else if(tmpVector[0] == "stop"){
+
+        }
+
+
+    }
+    vectorOfCommands.clear();
+
 }
 
 

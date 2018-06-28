@@ -26,6 +26,13 @@ public:
         void print() const {cout << s << endl;}
     };
 
+    class ParsingError{
+    public:
+        const std::string s;
+        ParsingError(const string& str) : s(str) { }
+        void print() const {cout << s << endl;}
+    };
+
 };
 
 

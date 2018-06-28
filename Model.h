@@ -41,6 +41,10 @@ public:
 
     std::vector<shared_ptr<Ship>>::iterator findShip(string& name);
 
+    vector<vector<string>> &getVectorOfCommands();
+
+    void go();
+
     ~Model(){}
 
 
@@ -50,6 +54,8 @@ private:
     std::vector<shared_ptr<Port>> portVec;
 
     std::shared_ptr<AbstractFactory> shipFactory;
+
+    std::vector<std::vector<std::string>> vectorOfCommands, attackVector;
 
     int time;
 };
