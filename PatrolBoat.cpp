@@ -19,12 +19,17 @@ void PatrolBoat::setResistance(int Resistance) {
 
 void PatrolBoat::Moving(Point &point, int speed) {
     if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == DeadInTheWater){
-        //throw canot do this move
+        if(status == DeadInTheWater){
+            throw MyExceptions::ShipStatusException("The ship is dead in the water");
+        }
+        throw MyExceptions::ShipStatusException("The ship can't change destination in the middle of a round ");
     }
     if(status == Docked && (existInQueueGas || numOfMoves != 3)){
-        //the ship in gas queue or in a round
+        if(numOfMoves != 3){
+            throw MyExceptions::ShipStatusException("The ship can't change destination in the middle of a round ");
+        }
+        throw MyExceptions::ShipStatusException("The ship exists in the queue, cant move ");
     }
-
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::PointDest);
     trackBase.setDestination(point);
@@ -32,14 +37,18 @@ void PatrolBoat::Moving(Point &point, int speed) {
 }
 
 void PatrolBoat::Moving(double angle, int speed) {
-    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort)|| status == DeadInTheWater){
-        //throw canot do this move
+    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == DeadInTheWater){
+        if(status == DeadInTheWater){
+            throw MyExceptions::ShipStatusException("The ship is dead in the water");
+        }
+        throw MyExceptions::ShipStatusException("The ship can't change destination in the middle of a round ");
     }
     if(status == Docked && (existInQueueGas || numOfMoves != 3)){
-        //the ship in gas queue or in a round
-
+        if(numOfMoves != 3){
+            throw MyExceptions::ShipStatusException("The ship can't change destination in the middle of a round ");
+        }
+        throw MyExceptions::ShipStatusException("The ship exists in the queue, cant move ");
     }
-
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::Angle);
     trackBase.setAngle(angle);
@@ -47,23 +56,27 @@ void PatrolBoat::Moving(double angle, int speed) {
 }
 
 void PatrolBoat::Moving(weak_ptr<class Port> port, int speed) {
-    if((status == Ship::Status::MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == Ship::Status::DeadInTheWater){
-        //throw canot do this move
+    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == DeadInTheWater){
+        if(status == DeadInTheWater){
+            throw MyExceptions::ShipStatusException("The ship is dead in the water");
+        }
+        throw MyExceptions::ShipStatusException("The ship can't change destination in the middle of a round ");
     }
-    if(numOfMoves == 3) {
-        setStatus(Ship::Status::MovingTo);
-        trackBase.setMovingWay(TrackBase::ByPort);
-        trackBase.setPort(port);
-        trackBase.setSpeed(speed);
-        std::fill(visitedPorts.begin(), visitedPorts.end(), false);
-        indexOfFirstPort = givesIndexOfPort(port);
-        visitedPorts[indexOfFirstPort] = true;
-        index = indexOfFirstPort;
-        numOfMoves = 0;
+    if(status == Docked && (existInQueueGas || numOfMoves != 3)){
+        if(numOfMoves != 3){
+            throw MyExceptions::ShipStatusException("The ship can't change destination in the middle of a round ");
+        }
+        throw MyExceptions::ShipStatusException("The ship exists in the queue, cant move ");
     }
-    else{
-        //canot do this move because the ship is in round
-    }
+    setStatus(Ship::Status::MovingTo);
+    trackBase.setMovingWay(TrackBase::ByPort);
+    trackBase.setPort(port);
+    trackBase.setSpeed(speed);
+    std::fill(visitedPorts.begin(), visitedPorts.end(), false);
+    indexOfFirstPort = givesIndexOfPort(port);
+    visitedPorts[indexOfFirstPort] = true;
+    index = indexOfFirstPort;
+    numOfMoves = 0;
 }
 
 void PatrolBoat::update() {
@@ -74,10 +87,6 @@ void PatrolBoat::update() {
         stepOnWater();
         decreaseGas();
     }
-    else if(status == Ship::Status::DeadInTheWater){
-        //throw dead in water
-    }
-
 }
 
 void PatrolBoat::docked() {

@@ -33,6 +33,27 @@ public:
         void print() const {cout << s << endl;}
     };
 
+    class ShipStatusException{
+    public:
+        const std::string s;
+        ShipStatusException(const string& s) : s(s){}
+        void print() const {cout << s << endl;}
+    };
+
+    class ShipRefuelException{
+    public:
+        const std::string s;
+        ShipRefuelException(const string& s) : s(s){}
+        void print() const {cout << s << endl;}
+    };
+
+    class OutOfRangeException{
+    public:
+        const std::string s;
+        OutOfRangeException(const string& s) : s(s){}
+        void print() const {cout << s << endl;}
+    };
+
 };
 
 

@@ -11,6 +11,7 @@ Controller::Controller(int argc, char **argv) {
     Model::getInstance(); // creating the model
     //View view .. Ctor
     initPorts(argc,argv);
+    run();
 }
 
 void Controller::initPorts(int argc, char **argv) {
@@ -24,12 +25,12 @@ void Controller::initPorts(int argc, char **argv) {
         while(getline(file,line)){
             istringstream iss(line);/*Separate the input of user by spaces*/
             std::vector<std::string> input((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>()); // holds the line seperated " "
-            input[2].erase(input[3].begin(),input[3].begin() + 1);
+            input[1].erase(input[1].begin(),input[1].begin() + 1);
+            input[1].pop_back();
             input[2].pop_back();
-            input[3].pop_back();
-            if(std::find_if(input[1].begin(), input[1].end(), [](char c) -> bool { return !std::isalpha(c); }) != input[1].end())
+            if(std::find_if(input[0].begin(), input[0].end(), [](char c) -> bool { return !std::isalpha(c); }) != input[0].end())
                 throw runtime_error("");
-            Model::getInstance().addPort(input[1],Point(std::stod(input[2]),std::stod(input[3])),std::stoi(input[4]),std::stoi(input[5]));
+            Model::getInstance().addPort(input[0],Point(std::stod(input[1]),std::stod(input[2])),std::stoi(input[3]),std::stoi(input[4]));
         }
 
     }catch(invalid_argument& ia){
@@ -57,9 +58,11 @@ void Controller::run() {
     Point point;
     int resOatt, rangeOcap,speed;
     bool inLoop = true;
-    std::vector<string> inputStringVector;
+    //std::vector<string> inputStringVector;
 
-    typedef  enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214, CREATE = 628, COURSE = 657, POSITION = 885,
+    //create = 628
+
+    typedef  enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214, CREATE = 1, COURSE = 657, POSITION = 885,
         DESTINATION = 1186, LOAD_AT = 724, UNLOAD_AT = 951, DOCK_AT = 725, ATTACK = 632, REFUEL = 643, STOP = 454, EXIT = 442 } InputCommand;
 
     try{
@@ -67,14 +70,16 @@ void Controller::run() {
             line = "";
             cin >> line;
             stringstream ss(line);
-            inputStringVector.clear();
-            while(ss >> tmp) // inserting all the other arguments into a string vector
-                inputStringVector.emplace_back(tmp);
+            //inputStringVector.clear();
+            std::vector<std::string> inputStringVector((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
+//            while(ss >> tmp) // inserting all the other arguments into a string vector
+//                inputStringVector.emplace_back(tmp);
 
             //because commands are the first or second word in the string, I'm checking if the first word is a ship and if not it's a command
-            hashMe = Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() ? inputStringVector[1] : inputStringVector[0];
-
-                switch(hashing(hashMe)) {
+            cout << "first : " << inputStringVector[0] << "  sc :" ;//<< inputStringVector[1] << endl;
+            //hashMe = Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() ? inputStringVector[1] : inputStringVector[0];
+            cout << Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() << endl;
+                switch(1) {
                     case InputCommand::DEFAULT:
                         break;
 
@@ -112,6 +117,7 @@ void Controller::run() {
 
 
                     case InputCommand::CREATE:
+                        cout << "Raviv" << endl;
                         if(inputStringVector[0] != "create")
                             throw MyExceptions::InvalidInput("Command not found");
 
@@ -152,6 +158,7 @@ void Controller::run() {
 
 
                     case InputCommand::COURSE:
+
                         if(inputStringVector[1] != "course") // checking command validation
                             throw MyExceptions::InvalidInput("Command not found");
                         if(inputStringVector.size() != 4) // exactly 4 arguments
@@ -327,6 +334,12 @@ void Controller::run() {
             ia.print();
         }catch(MyExceptions::ParsingError& pe){
             pe.print();
+        }catch (MyExceptions::ShipStatusException& s){
+            s.print();
+        }catch (MyExceptions::ShipRefuelException& s){
+            s.print();
+        }catch (MyExceptions::OutOfRangeException& s){
+            s.print();
         }
 
     }// function run()

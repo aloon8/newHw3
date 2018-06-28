@@ -16,7 +16,7 @@ void Cruiser::update() {
 
 void Cruiser::attack(std::weak_ptr<Ship> ship){
     if(range > trackBase.getPosition().distance(ship.lock()->getTrackBase().getPosition())){
-        //throw exception
+        throw MyExceptions::OutOfRangeException("The ship is out of range for attack");
     }
     ship.lock()->setStatus(Stopped);
     if(myType == Ship::TypeIdShip::FR){
@@ -50,10 +50,6 @@ void Cruiser::printStatus() const {
         printMoveWay();
     else if(status == Ship::Status::Stopped)
         cout << "Stopped";
-    else if(status == Ship::Status::DeadInTheWater)
-        cout << "Dead in the water";
-    else
-        cout << "Docked at " << trackBase.getPort().lock()->getPortName();
     cout << endl;
 }
 

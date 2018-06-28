@@ -62,6 +62,7 @@ std::vector<shared_ptr<Ship>>::iterator Model::findShip(const string &name) {
     while(beg != end) {
         if((*beg)->getName() == name)
             return beg;
+        beg++;
     }
     return beg;
 }

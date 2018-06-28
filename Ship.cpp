@@ -71,7 +71,6 @@ void Ship::stepOnWater() {
         }
     }
     else{
-        //
         Point newPos = trackBase.getPosition().givesTheNextPoint
                 (trackBase.getSpeed(),trackBase.getPosition().toAngle(trackBase.getDestination()));
         if(trackBase.getPosition().distance(newPos) > trackBase.getPosition().distance(trackBase.getDestination())){
@@ -85,7 +84,7 @@ void Ship::stepOnWater() {
 
 void Ship::refuel() {
     if (status != Ship::Status::Docked) {
-        //throw ship dosent in docked
+        throw MyExceptions::ShipStatusException("Cannot refuel a ship that isn't docked");
     }
 
     auto ship = Model::getInstance().findShip(name);

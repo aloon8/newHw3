@@ -14,6 +14,8 @@
 #include "Geometry.h"
 #include "MyExceptions.h"
 
+using namespace std;
+
 class Controller {
 
 public:

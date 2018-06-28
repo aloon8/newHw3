@@ -6,10 +6,6 @@
 #include "Freighter.h"
 #include "Model.h"
 
-
-
-
-
 Freighter::Freighter(std::string shipName, const Point& pos, int Resistance,int Containers) : Ship(shipName, pos), Resistance(Resistance)
         , Containers(Containers), Gas(MAX_GAS_FREIGHTER), myType(FR), maxContainers(Containers){}
 
@@ -45,25 +41,19 @@ void Freighter::update() {
         stepOnWater();
         decreaseGas();
     }
-    else if(status == Ship::Status::DeadInTheWater){
-        //throw dead in the water
-    }
 }
 
 
 void Freighter::Moving(weak_ptr<class Port> port, int speed) {
-    if((status == Ship::Status::MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == Ship::Status::DeadInTheWater){
-    //throw canot do this move
-        return;
+    if(status == Ship::Status::DeadInTheWater){
+        throw MyExceptions::ShipStatusException("The ship is dead in the water, can't move");
     }
     if(status == Docked){
         if(existInMissionQue()){
-            cout << "she need to unload or load in this port" << endl;
-            return;
+            throw MyExceptions::ShipStatusException("The ship needs to unload or load in this port");
         }
         else if(existInQueueGas) {
-            cout << "the ship need rufuel" << endl; //the ship in gas queue
-            return;
+            throw MyExceptions::ShipRefuelException("The ship needs to refuel before move");
         }
     }
     setStatus(Ship::Status::MovingTo);
@@ -73,20 +63,17 @@ void Freighter::Moving(weak_ptr<class Port> port, int speed) {
 }
 
 void Freighter::Moving(Point &point, int speed) {
-    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == DeadInTheWater){
-        //throw canot do this move
+    if(status == Ship::Status::DeadInTheWater){
+        throw MyExceptions::ShipStatusException("The ship is dead in the water, can't move");
     }
     if(status == Docked){
         if(existInMissionQue()){
-            cout << "she need to unload or load in this port" << endl;
-            return;
+            throw MyExceptions::ShipStatusException("The ship needs to unload or load in this port");
         }
         else if(existInQueueGas) {
-            cout << "the ship need rufuel" << endl; //the ship in gas queue
-            return;
+            throw MyExceptions::ShipRefuelException("The ship needs to refuel before move");
         }
     }
-
 
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::PointDest);
@@ -95,17 +82,15 @@ void Freighter::Moving(Point &point, int speed) {
 }
 
 void Freighter::Moving(double angle, int speed) {
-    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort)|| status == DeadInTheWater){
-        //throw canot do this move
+    if(status == Ship::Status::DeadInTheWater){
+        throw MyExceptions::ShipStatusException("The ship is dead in the water, can't move");
     }
     if(status == Docked){
         if(existInMissionQue()){
-            cout << "she need to unload or load in this port" << endl;
-            return;
+            throw MyExceptions::ShipStatusException("The ship needs to unload or load in this port");
         }
         else if(existInQueueGas) {
-            cout << "the ship need rufuel" << endl; //the ship in gas queue
-            return;
+            throw MyExceptions::ShipRefuelException("The ship needs to refuel before move");
         }
     }
     setStatus(Ship::Status::MovingTo);
@@ -131,7 +116,7 @@ void Freighter::docked() {//when the ship docks
     auto end = missionQue.end();
     for(; begin != end; begin++){//Checks if the ship has a command of load or unload from the port that is docked
         if((*begin).first == trackBase.getPort().lock()->getPortName())
-        break;
+            break;
     }
     if(begin != end){//if the vector have this port its means that have a command to do
         if((*begin).second == "load"){
@@ -164,7 +149,7 @@ void Freighter::dock(std::weak_ptr<Port> port) {
 
 void Freighter::decreaseGas() {
     Gas -= trackBase.getSpeed()*GAS_USE_PER_NM_FREIGHTER;
-    if(Gas <=0){//if the ship doesn't have gas she change her status to dead in water
+    if(Gas <=0){//if the ship doesn't have gas she changes her status to dead in water
         setStatus(Ship::Status::DeadInTheWater);
         Gas = 0;
     }
