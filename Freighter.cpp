@@ -6,7 +6,7 @@
 #include "Freighter.h"
 #include "Model.h"
 
-//Freighter::MAX_GAS = 500000;
+
 
 
 

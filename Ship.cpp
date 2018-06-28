@@ -5,6 +5,7 @@
 #include "Ship.h"
 #include "Model.h"
 
+
 Ship::Ship(const string& name,const Point& point, const Status& status ) :
         name(name), trackBase(TrackBase(point)), status(status), existInQueueGas(false){}
 

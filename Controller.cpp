@@ -2,15 +2,44 @@
 // Created by raviv on 6/17/18.
 //
 
+#include <fstream>
 #include "Controller.h"
 
 using namespace std;
 
 Controller::Controller(int argc, char **argv) {
-
+    Model::getInstance(); // creating the model
+    //View view .. Ctor
+    initPorts(argc,argv);
 }
 
+void Controller::initPorts(int argc, char **argv) {
+    if(argc < 2 ){ // has to get an input file to initialize the ports
+        cerr << "Not enouph files for program\n Aborting program\n";
+        exit(1);
+    }
+    string line = "";
+    ifstream file(argv[1]);
+    try{
+        while(getline(file,line)){
+            istringstream iss(line);/*Separate the input of user by spaces*/
+            std::vector<std::string> input((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>()); // holds the line seperated " "
+            input[2].erase(input[3].begin(),input[3].begin() + 1);
+            input[2].pop_back();
+            input[3].pop_back();
+            if(std::find_if(input[1].begin(), input[1].end(), [](char c) -> bool { return !std::isalpha(c); }) != input[1].end())
+                throw runtime_error("");
+            Model::getInstance().addPort(input[1],Point(std::stod(input[2]),std::stod(input[3])),std::stoi(input[4]),std::stoi(input[5]));
+        }
 
+    }catch(invalid_argument& ia){
+        cerr << "Cannot parse a non-digit character into a double or an int\n Aborting program\n";
+        exit(1);
+    }catch(runtime_error& re){
+        cerr << "Name of Port Can't contain charcters different than letters\n";
+        exit(1);
+    }
+}
 
 int Controller::hashing(std::string name){
     int cnt = 0;
@@ -264,8 +293,8 @@ void Controller::run() {
                             throw MyExceptions::InvalidArgument("Refuel needs exactly 2 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
-                        if((*(Model::getInstance().findShip(inputStringVector[0])))->getTypeName() == Ship::PB)
-                            throw MyExceptions::InvalidArgument("Cannot refuek a patrol boat");
+                        if((*(Model::getInstance().findShip(inputStringVector[0])))->getTypeName() != Ship::FR)
+                            throw MyExceptions::InvalidArgument("Cannot refuel a patrol boat");
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
                         break;
 

@@ -26,18 +26,17 @@ public:
 
 
     virtual TypeIdShip getTypeName()=0;
+
 //    void Stop();
-//
-//    virtual void Dock(weak_ptr<class Port> port);
-//
-//    virtual void Unload(int numOfContainersToUnload);
-//
+
     virtual void load_at(std::weak_ptr<Port> port){}
-//
-//    virtual void DeadInWater();
-//
-    virtual void Moving(weak_ptr<class Port> port, int speed){}
-//
+
+    virtual void Moving(weak_ptr<Port> port, int speed){}
+
+    virtual void unload_at(std::weak_ptr<Port> port, int containers){}
+
+    virtual void dock(std::weak_ptr<Port> port){}
+
     virtual void Moving(Point& point, int speed);
 
     virtual void Moving(double angle, int speed);

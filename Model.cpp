@@ -83,29 +83,31 @@ vector<vector<string>> &Model::getVectorOfCommands() {
 void Model::go() {
     int speed;
     double angle;
+    Point point;
 
 
     for (auto Command : vectorOfCommands) {
 
         if (Command[1] == "course"){
-            auto tmpShip = findShip(Command[0]);
-            (*tmpShip)
+            (*findShip(Command[0]))->Moving(std::stod(Command[2]),std::stoi(Command[1]));
         }else if(Command[1] == "position"){
-
+            point.x = std::stod(Command[2]);
+            point.y = std::stod(Command[3]);
+            (*findShip(Command[0]))->Moving(point,std::stoi(Command[4]));
         }else if(Command[1] == "destination"){
-
+            (*findShip(Command[0]))->Moving((*findPort(Command[3])),std::stoi(Command[4]));
         }else if(Command[1] == "load_at"){
-
+            (*findShip(Command[0]))->load_at((*findPort(Command[2])));
         }else if(Command[1] == "unload_at"){
-
+            (*findShip(Command[0]))->unload_at((*findPort(Command[2])),std::stoi(Command[3]));
         }else if(Command[1] == "dock_at"){
-
+            (*findShip(Command[0]))->dock((*findPort(Command[2])));
         }else if(Command[1] == "refuel"){
-
+            (*findShip(Command[0]))->refuel();
         }else if(Command[1] == "stop"){
-
+//            (*findShip(Command[0]))->
         }else if(Command[1] == "attack"){
-
+            (*findShip(Command[0]))->attack((*findShip(Command[2])));
         }
 
     }

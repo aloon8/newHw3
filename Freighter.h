@@ -15,8 +15,6 @@ public:
 
     Freighter(std::string shipName, const Point& pos,int Resistance,int Containers);
 
-    void Dock(weak_ptr<Port> port);
-
     virtual void update();
 
     virtual void printStatus() const;
