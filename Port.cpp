@@ -19,7 +19,9 @@ void Port::update(){
 }
 
 void Port::printStatus() {
-
+    cout << "Port " << portName << " at position ";
+    position.print();
+    cout << ", Fuel available: " << setprecision(2) << gasStoke << " kl" << endl;
 }
 
 void Port::insertToGasQueue(std::vector<shared_ptr<Ship>>::iterator it) {
