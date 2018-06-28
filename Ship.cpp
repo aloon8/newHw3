@@ -3,9 +3,10 @@
 //
 
 #include "Ship.h"
+#include "Model.h"
 
 Ship::Ship(const string& name,const Point& point, const Status& status ) :
-        name(name), trackBase(TrackBase(point)), status(status){}
+        name(name), trackBase(TrackBase(point)), status(status), existInQueueGas(false){}
 
 const TrackBase &Ship::getTrackBase() const {
     return trackBase;
@@ -23,16 +24,95 @@ void Ship::printMoveWay() const {
     if(trackBase.getMovingWay() == TrackBase::MovingType::PointDest){
         cout << "Moving to ";
         trackBase.getDestination().print();
-        cout << " on course " << fixed << trackBase.getPosition().printAngle(trackBase.getDestination())
+        cout << " on course " << fixed << trackBase.getPosition().toAngle(trackBase.getDestination())
              << " deg, speed " << trackBase.getSpeed() << " nm/hr ";
     }
     else if(trackBase.getMovingWay() == TrackBase::MovingType::ByPort){
-        cout << "Moving to " << trackBase.getPort().lock()->getPortName()<< " on course"<< setprecision(2)
-             << trackBase.getPosition().printAngle(trackBase.getPort().lock()->getPosition()) << " deg, speed "
+        cout << "Moving to " << trackBase.getPort().lock()->getPortName()<< " on course "<< setprecision(2)
+             << trackBase.getPosition().toAngle(trackBase.getPort().lock()->getPosition()) << " deg, speed "
              << trackBase.getSpeed() << " nm/hr ";
     }
     else if(trackBase.getMovingWay() == TrackBase::MovingType::Angle){
         cout << "Moving on course " << trackBase.getAngle() << " deg, speed " << trackBase.getSpeed() << " nm/hr ";
     }
+}
+
+void Ship::Moving(Point &point, int speed) {
+    if((status == Ship::Status::MovingTo && trackBase.getMovingWay() == TrackBase::ByPort) || status == Ship::Status::DeadInTheWater){
+        //throw canot do this move
+    }
+    if(status == Docked && existInQueueGas){
+        //the ship in gas queue
+    }
+    setStatus(Ship::Status::MovingTo);
+    trackBase.setMovingWay(TrackBase::PointDest);
+    trackBase.setDestination(point);
+    trackBase.setSpeed(speed);
+}
+
+void Ship::Moving(double angle, int speed) {
+    if((status == MovingTo && trackBase.getMovingWay() == TrackBase::ByPort)|| status == DeadInTheWater){
+        //throw canot do this move
+    }
+    if(status == Docked && existInQueueGas){
+        //the ship in gas queue
+        // need to check if freighter ship dosent need unload or load
+    }
+
+    setStatus(Ship::Status::MovingTo);
+    trackBase.setMovingWay(TrackBase::Angle);
+    trackBase.setAngle(angle);
+    trackBase.setSpeed(speed);
+}
+
+void Ship::stepOnWater() {
+    //this function will be the next movement of ship
+    if(trackBase.getMovingWay() == TrackBase::Angle){
+        Point newPos = trackBase.getPosition().givesTheNextPoint
+                (trackBase.getSpeed(),trackBase.getAngle());
+        trackBase.setPosition(newPos);
+    }
+    else if(trackBase.getMovingWay() == TrackBase::ByPort){
+        //return point that will be the next point destination
+        Point newPos = trackBase.getPosition().givesTheNextPoint
+                (trackBase.getSpeed(),trackBase.getPosition().toAngle(trackBase.getPort().lock()->getPosition()));
+        if(trackBase.getPosition().distance(newPos) > trackBase.getPosition().distance(trackBase.getPort().lock()->getPosition())){
+            trackBase.setPosition(trackBase.getPort().lock()->getPosition());//the ship arrive to port
+            setStatus(Ship::Status::Docked);
+        }else{
+            trackBase.setPosition(newPos);
+        }
+    }
+    else{
+        //
+        Point newPos = trackBase.getPosition().givesTheNextPoint
+                (trackBase.getSpeed(),trackBase.getPosition().toAngle(trackBase.getDestination()));
+        if(trackBase.getPosition().distance(newPos) > trackBase.getPosition().distance(trackBase.getDestination())){
+            trackBase.setPosition(trackBase.getDestination());//the ship arrive to position
+            setStatus(Ship::Status::Stopped);
+        }else{
+            trackBase.setPosition(newPos);
+        }
+    }
+}
+
+bool Ship::refuel() {
+    if (status != Ship::Status::Docked) {
+        //throw ship dosent in docked
+    }
+
+    auto ship = Model::getInstance().findShip(name);
+
+    if (!existInQueueGas) {//the queue ships doesn't have this ship
+        trackBase.getPort().lock()->insertToGasQueue(ship);
+        existInQueueGas = true;
+    }
+
+    if (trackBase.getPort().lock()->firstInQue(ship)) {//check if this ship is the first in queue
+        existInQueueGas = false;
+        refuelAfterQue();
+        return true;// the ship refueled
+    }
+    return false; // the ship doesn't first in queue
 }
 

@@ -36,9 +36,9 @@ public:
 
     void setPort(const weak_ptr<Port> &port);
 
-    int getSpeed() const;
+    double getSpeed() const;
 
-    void setSpeed(int speed);
+    void setSpeed(double speed);
 
 private:
 
@@ -50,7 +50,7 @@ private:
 
     weak_ptr<class Port> port;
 
-    int speed;
+    double speed;
 };
 
 

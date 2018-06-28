@@ -46,11 +46,11 @@ void TrackBase::setPort(const weak_ptr<Port> &port) {
     TrackBase::port = port;
 }
 
-int TrackBase::getSpeed() const {
+double TrackBase::getSpeed() const {
     return speed;
 }
 
-void TrackBase::setSpeed(int speed) {
+void TrackBase::setSpeed(double speed) {
     TrackBase::speed = speed;
 }
 

@@ -17,13 +17,9 @@ public:
 
     virtual TypeIdShip getTypeName(){ return myType;}
 
-    virtual void Moving(Point& point, int speed);
-
-    virtual void Moving(double angle, int speed);
-
     virtual void attack(std::weak_ptr<Ship> ship);
 
-    void update() {}
+    void update();
 
     void printStatus() const;
 private:

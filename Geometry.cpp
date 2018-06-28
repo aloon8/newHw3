@@ -84,7 +84,7 @@ bool Point::operator==(const Point & rhs)
     return x == rhs.x && y == rhs.y;
 }
 
-double Point::printAngle(const Point& p) const {
+double Point::toAngle(const Point& p) const {
     /* atan2 will return a negative angle for Quadrant III, IV, must translate to I, II */
     double theta = atan2(p.y - y,p.x - x) * 180 / pi;
 
@@ -92,3 +92,11 @@ double Point::printAngle(const Point& p) const {
         theta += 360.0; // normalize theta positive
     return theta;
 }
+
+Point Point::givesTheNextPoint(double radius, double angle)const {
+    double delta_x = (radius * cos(angle * pi / 180))+x;
+    double delta_y = (radius * sin(angle * pi / 180))+y;
+    return Point(delta_x,delta_y);
+}
+
+

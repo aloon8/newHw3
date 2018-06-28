@@ -20,15 +20,17 @@ public:
 
     virtual void update();
 
-    virtual void printStatus() const {}
+    virtual void printStatus() const;
 
     const vector<shared_ptr<Ship>>& getVecShip()const{ return Model::getInstance().getShipVec();}
 
     void docked();
 
-    void stepOnWater();
+    virtual void refuelAfterQue();
 
     std::weak_ptr<Port> givesTheCloserPort();
+
+    int givesIndexOfPort(std::weak_ptr<Port> port);
 
     virtual TypeIdShip getTypeName(){ return myType;}
 
@@ -41,15 +43,16 @@ public:
     void setResistance(int Resistance);
 
 private:
-    int Resistance,index,numOfMoves;
+    int Resistance,index,numOfMoves,Gas;
 
     TypeIdShip myType;
 
     vector<bool> visitedPorts;
 
-    bool existInQueueGas;
+    //bool existInQueueGas;
 
-
+    //functions
+    void decreaseGas();
 };
 
 

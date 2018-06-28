@@ -21,7 +21,7 @@ public:
     Ship(const std::string& name,const Point& point, const Status& status = Status::Stopped );
 
     friend bool operator==(std::shared_ptr<Ship> s1, const Ship& s2){return s1->name == s2.name;}
-    //friend bool operator==(const Ship& s1 , std::weak_ptr<Ship> s2)const {return s1.name == s2.lock()->name;}
+    friend bool operator==(std::shared_ptr<Ship> s1 , std::weak_ptr<Ship> s2) {return s1->name == s2.lock()->name;}
 
 
 
@@ -32,19 +32,23 @@ public:
 //
 //    virtual void Unload(int numOfContainersToUnload);
 //
-//    virtual void load();
+    virtual void load_at(std::weak_ptr<Port> port){}
 //
 //    virtual void DeadInWater();
 //
-      virtual void Moving(weak_ptr<class Port> port, int speed){}
+    virtual void Moving(weak_ptr<class Port> port, int speed){}
 //
-      virtual void Moving(Point& point, int speed){}
+    virtual void Moving(Point& point, int speed);
 
-      virtual void Moving(double angle, int speed){}
+    virtual void Moving(double angle, int speed);
 
-      virtual void attack(std::weak_ptr<Ship> ship){}
-//
-//    virtual void reFuel();
+    virtual void stepOnWater();
+
+    virtual void attack(std::weak_ptr<Ship> ship){}
+
+    virtual void refuelAfterQue(){}
+
+    bool refuel();
 
     inline std::string getName(){return name;}
 
@@ -67,6 +71,8 @@ protected:
     TrackBase trackBase;
 
     Status status;
+
+    bool existInQueueGas;
 
 };
 

@@ -21,7 +21,9 @@ public:
 
     }
 
-    bool insertToGasQueue(std::vector<shared_ptr<class Ship>>::iterator it);
+    void insertToGasQueue(std::vector<shared_ptr<class Ship>>::iterator it);
+
+    bool firstInQue(std::vector<shared_ptr<class Ship>>::iterator it);
 
     void update();
 
