@@ -23,10 +23,10 @@ Model::Model() : time(0) {
 
 void Model::update() {
     time++; // incrementing time every update
-    for (int i = 0; i < portVec.size(); ++i)
-        portVec[i]->update();
     for (int i = 0; i < shipVec.size(); ++i)
         shipVec[i]->update();
+    for (int i = 0; i < portVec.size(); ++i)
+        portVec[i]->update();
 }
 
 void Model::addPort(const string portName, const Point &pos, const int GasStoke, const int produce) {
@@ -56,11 +56,21 @@ const shared_ptr<AbstractFactory> &Model::getShipFactory() const {
     return shipFactory;
 }
 
-std::vector<shared_ptr<Ship>>::iterator Model::findShip(string &name) {
+std::vector<shared_ptr<Ship>>::iterator Model::findShip(const string &name) {
     auto beg = shipVec.begin();
     auto end = shipVec.end();
     while(beg != end) {
         if((*beg)->getName() == name)
+            return beg;
+    }
+    return beg;
+}
+
+std::vector<shared_ptr<Port>>::iterator Model::findPort(const string &name) {
+    auto beg = portVec.begin();
+    auto end = portVec.end();
+    while(beg != end) {
+        if((*beg)->getPortName() == name)
             return beg;
     }
     return beg;
@@ -71,38 +81,36 @@ vector<vector<string>> &Model::getVectorOfCommands() {
 }
 
 void Model::go() {
-    for (int i = 0; i < attackVector.size(); ++i) {
-        auto tmpVec = attackVector[i];
-        //attack
-    }
-    attackVector.clear();
-    for (int i = 0; i < vectorOfCommands.size(); ++i) {
-        auto tmpVector = vectorOfCommands[i];
+    int speed;
+    double angle;
 
-        if (tmpVector[0] == "go") {
 
-        }else if (tmpVector[0] == "course"){
+    for (auto Command : vectorOfCommands) {
 
-        }else if(tmpVector[0] == "position"){
+        if (Command[1] == "course"){
+            auto tmpShip = findShip(Command[0]);
+            (*tmpShip)
+        }else if(Command[1] == "position"){
 
-        }else if(tmpVector[0] == "destination"){
+        }else if(Command[1] == "destination"){
 
-        }else if(tmpVector[0] == "load_at"){
+        }else if(Command[1] == "load_at"){
 
-        }else if(tmpVector[0] == "unload_at"){
+        }else if(Command[1] == "unload_at"){
 
-        }else if(tmpVector[0] == "dock_at"){
+        }else if(Command[1] == "dock_at"){
 
-        }else if(tmpVector[0] == "refuel"){
+        }else if(Command[1] == "refuel"){
 
-        }else if(tmpVector[0] == "stop"){
+        }else if(Command[1] == "stop"){
+
+        }else if(Command[1] == "attack"){
 
         }
 
-
     }
     vectorOfCommands.clear();
-
+    update();
 }
 
 

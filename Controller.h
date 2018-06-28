@@ -19,6 +19,12 @@ public:
 
     void run();
 
+    static const int MAX_SPEED_PATROL = 15;
+
+    static const int MAX_SPEED_FREIGHTER = 40;
+
+    static const int MAX_SPEED_CRUISER = 75;
+
 private:
     int hashing(std::string);
 

@@ -9,7 +9,6 @@
 #include <vector>
 #include <memory>
 #include "AbstractFactory.h"
-
 #include "Ship.h"
 
 
@@ -19,11 +18,9 @@ public:
 
     Model();
 
-    int getTime() const;
+    ~Model(){}
 
-    const vector<shared_ptr<Port>> &getPortVec() const;
-
-    static Model& getInstance(); // Singleton
+    void go();
 
     void update();
 
@@ -33,19 +30,25 @@ public:
 
     void printAllObjectsStatus();
 
+    std::vector<shared_ptr<Ship>>::iterator findShip(const string& name);
+
+    std::vector<shared_ptr<Port>>::iterator findPort(const string& name);
+
+    /**    Getters & Setters   **/
+
+    const vector<shared_ptr<Port>> &getPortVec() const;
+
+    static Model& getInstance(); // Singleton
+
+    int getTime() const;
+
+    vector<vector<string>> &getVectorOfCommands();
+
     int getSizeOfPortVector(){return (int)portVec.size();}
 
     const vector<shared_ptr<Ship>> &getShipVec() const;
 
     const shared_ptr<AbstractFactory> &getShipFactory() const;
-
-    std::vector<shared_ptr<Ship>>::iterator findShip(string& name);
-
-    vector<vector<string>> &getVectorOfCommands();
-
-    void go();
-
-    ~Model(){}
 
 
 private:
@@ -55,7 +58,7 @@ private:
 
     std::shared_ptr<AbstractFactory> shipFactory;
 
-    std::vector<std::vector<std::string>> vectorOfCommands, attackVector;
+    std::vector<std::vector<std::string>> vectorOfCommands;
 
     int time;
 };
