@@ -7,10 +7,10 @@
 
 using namespace std;
 
-Controller::Controller(int argc, char **argv) {
+Controller::Controller(int argc, char **argv) : view(Model::getInstance()) {
     Model::getInstance(); // creating the model
-    //View view .. Ctor
     initPorts(argc,argv);
+    view.initObjectView();
     run();
 }
 
@@ -68,6 +68,7 @@ void Controller::run() {
         while(inLoop){
             try{
                 line = "";
+                cout << "Time " << Model::getInstance().getTime() << ": Enter Command: " ;
                 getline(cin,line);
                 stringstream ss(line);
                 std::vector<std::string> inputStringVector((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
@@ -99,6 +100,9 @@ void Controller::run() {
 
 
                     case InputCommand::SHOW:
+                        if(inputStringVector.size() != 1)
+                            throw MyExceptions::InvalidInput("Show doesn't need any arguments");
+                        view.show();
                         break;
 
 
@@ -142,6 +146,8 @@ void Controller::run() {
 
                         point.x = std::stod(inputStringVector[3]);
                         point.y = std::stod(inputStringVector[4]);
+                        view.addObjectView(point,inputStringVector[1].substr(0,2));
+
                         resOatt = std::stoi(inputStringVector[5]);//throws invalid_argument of c++ std exceptions if fails
 
                         if(inputStringVector[2] != "Patrol_boat"){
@@ -283,6 +289,8 @@ void Controller::run() {
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() ||
                            Model::getInstance().findShip(inputStringVector[2]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
+                        if((*Model::getInstance().findShip(inputStringVector[0]))->getTypeName() != Ship::CR)
+                            throw MyExceptions::ShipStatusException("Only Cruiser ships can attack");
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
                         break;
 

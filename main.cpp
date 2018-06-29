@@ -6,6 +6,5 @@
 #include "Controller.h"
 
 int main(int argc ,char**argv) {
-    cout << argc << endl;
     Controller{argc,argv};
 }

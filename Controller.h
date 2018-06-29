@@ -13,6 +13,7 @@
 #include "Model.h"
 #include "Geometry.h"
 #include "MyExceptions.h"
+#include "View.h"
 
 using namespace std;
 
@@ -42,6 +43,8 @@ private:
     }
     //View view;
     std::vector<string> vecOfCommands;
+
+    View view;
 };
 
 
