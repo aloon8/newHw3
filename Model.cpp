@@ -107,9 +107,8 @@ void Model::go() {
             } else if (Command[1] == "refuel") {
                 (*findShip(Command[0]))->refuel();
             } else if (Command[1] == "stop") {
-              //  (*findShip(Command[0]))->stop();
-               // vectorOfCommands.erase(std::remove(vectorOfCommands.begin(),vectorOfCommands.end(),Command[0]),vectorOfCommands.end());
-//                stopThisShip(Command[1]);
+               // (*findShip(Command[0]))->stop();
+                stopThisShip(Command[1]);
             } else if (Command[1] == "attack") {
                 (*findShip(Command[0]))->attack((*findShip(Command[2])));
             }
@@ -126,13 +125,13 @@ void Model::go() {
     update();
 }
 
-//void Model::stopThisShip(const string &shipName) {
-//    for (int i = 0; i < vectorOfCommands.size(); ++i) {
-//            if(vectorOfCommands[i][0] == shipName){
-//                vectorOfCommands.erase(vectorOfCommands.begin() + i);
-//                break;
-//            }
-//    }
-//}
+void Model::stopThisShip(const string &shipName) {
+    for (int i = 0; i < vectorOfCommands.size(); ++i) {
+            if(vectorOfCommands[i][0] == shipName){
+                vectorOfCommands.erase(vectorOfCommands.begin() + i);
+                break;
+            }
+    }
+}
 
 

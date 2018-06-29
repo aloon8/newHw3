@@ -185,7 +185,7 @@ void Controller::run() {
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         tmpShip = (*Model::getInstance().findShip(inputStringVector[0]));
 
-                        inputStringVector[2].erase(inputStringVector[2].begin(),inputStringVector[3].begin() + 1); // erasing '(' from double
+                        inputStringVector[2].erase(inputStringVector[2].begin(),inputStringVector[2].begin() + 1); // erasing '(' from double
                         if(inputStringVector[2][inputStringVector[2].size() - 1] == ',')
                             inputStringVector[2].pop_back();
                         inputStringVector[3].pop_back(); // erasing ')'
@@ -196,7 +196,6 @@ void Controller::run() {
                             (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER < speed) ||
                             (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER < speed))
                             throw MyExceptions::InvalidArgument("Speed given is more than this ship can handle");
-
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
                         break;
 
