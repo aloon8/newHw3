@@ -145,6 +145,7 @@ void Freighter::dock(std::weak_ptr<Port> port) {
         trackBase.setSpeed(0);
         trackBase.setPosition(port.lock()->getPosition());
     }
+    //throw
 }
 
 void Freighter::decreaseGas() {

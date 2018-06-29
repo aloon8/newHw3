@@ -114,7 +114,7 @@ void PatrolBoat::docked() {
             numOfMoves = 0;
             break;
         case 3:
-            cout << "The boat: " << name << "finished it's round" << endl;
+            cout << "The boat: " << name << " finished it's round" << endl;
             break;
     }
 }

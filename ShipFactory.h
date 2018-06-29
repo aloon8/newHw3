@@ -23,7 +23,7 @@ public:
         else if(shipType == "Freighter"){
             nwShip = std::shared_ptr<Ship>(new Freighter(shipName, pos, resOatt, rangeOcap));
         }
-        else if(shipType == "PatrolBoat"){
+        else if(shipType == "Patrol_boat"){
             nwShip = std::shared_ptr<Ship>(new PatrolBoat(shipName, pos, resOatt));
         }
         //throw exception
