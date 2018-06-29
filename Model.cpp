@@ -3,7 +3,7 @@
 //
 
 #include "Model.h"
-#include "ShipFactory.h"
+#include "ShipFactory.h
 
 
 const vector<shared_ptr<Port>> &Model::getPortVec() const {
@@ -89,40 +89,49 @@ void Model::go() {
 
 
     for (auto Command : vectorOfCommands) {
-
-        if (Command[1] == "course"){
-            (*findShip(Command[0]))->Moving(std::stod(Command[2]),std::stoi(Command[3]));
-        }
-        else if(Command[1] == "position"){
-            point.x = std::stod(Command[2]);
-            point.y = std::stod(Command[3]);
-            (*findShip(Command[0]))->Moving(point,std::stoi(Command[4]));
-        }
-        else if(Command[1] == "destination"){
-            (*findShip(Command[0]))->Moving((*findPort(Command[2])),std::stoi(Command[3]));
-        }
-        else if(Command[1] == "load_at"){
-            (*findShip(Command[0]))->load_at((*findPort(Command[2])));
-        }
-        else if(Command[1] == "unload_at"){
-            (*findShip(Command[0]))->unload_at((*findPort(Command[2])),std::stoi(Command[3]));
-        }
-        else if(Command[1] == "dock_at"){
-            (*findShip(Command[0]))->dock((*findPort(Command[2])));
-        }
-        else if(Command[1] == "refuel"){
-            (*findShip(Command[0]))->refuel();
-        }
-        else if(Command[1] == "stop"){
-//            (*findShip(Command[0]))->
-        }
-        else if(Command[1] == "attack"){
-            (*findShip(Command[0]))->attack((*findShip(Command[2])));
+        try {
+            if (Command[1] == "course") {
+                (*findShip(Command[0]))->Moving(std::stod(Command[2]), std::stoi(Command[3]));
+            } else if (Command[1] == "position") {
+                point.x = std::stod(Command[2]);
+                point.y = std::stod(Command[3]);
+                (*findShip(Command[0]))->Moving(point, std::stoi(Command[4]));
+            } else if (Command[1] == "destination") {
+                (*findShip(Command[0]))->Moving((*findPort(Command[2])), std::stoi(Command[3]));
+            } else if (Command[1] == "load_at") {
+                (*findShip(Command[0]))->load_at((*findPort(Command[2])));
+            } else if (Command[1] == "unload_at") {
+                (*findShip(Command[0]))->unload_at((*findPort(Command[2])), std::stoi(Command[3]));
+            } else if (Command[1] == "dock_at") {
+                (*findShip(Command[0]))->dock((*findPort(Command[2])));
+            } else if (Command[1] == "refuel") {
+                (*findShip(Command[0]))->refuel();
+            } else if (Command[1] == "stop") {
+                (*findShip(Command[0]))->setStatus(Ship::Stopped);
+                stopThisShip(Command[1]);
+            } else if (Command[1] == "attack") {
+                (*findShip(Command[0]))->attack((*findShip(Command[2])));
+            }
+        }catch(MyExceptions::ShipStatusException& sse){
+            sse.print();
+        }catch(MyExceptions::ShipRefuelException& sre){
+            sre.print();
+        }catch(MyExceptions::OutOfRangeException& ooe){
+            ooe.print();
         }
 
     }
     vectorOfCommands.clear();
     update();
+}
+
+void Model::stopThisShip(const string &shipName) {
+    for (auto Command : vectorOfCommands) {
+        if(Command[0] == shipName){
+
+        }
+    }
+
 }
 
 

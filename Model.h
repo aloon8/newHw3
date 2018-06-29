@@ -50,6 +50,8 @@ public:
 
     const shared_ptr<AbstractFactory> &getShipFactory() const;
 
+    void stopThisShip(const string& shipName);
+
 
 private:
     std::vector<shared_ptr<Ship>> shipVec;
