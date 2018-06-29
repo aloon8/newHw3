@@ -40,7 +40,7 @@ public:
 
     virtual TypeIdShip getTypeName(){ return myType;}
 
-    static const int MAX_GAS_PATROL = 500000;
+    static const int MAX_GAS_PATROL = 900000;
     static const int GAS_USE_PER_NM_PATROL = 2000;
 
     int getResistance() const;
