@@ -29,17 +29,17 @@ void Controller::initPorts(int argc, char **argv) {
             input[1].pop_back();
             input[2].pop_back();
             if(std::find_if(input[0].begin(), input[0].end(), [](char c) -> bool { return !std::isalpha(c); }) != input[0].end() ){
-                cout << input[0] << endl;
                 throw runtime_error("");
             }
             Model::getInstance().addPort(input[0],Point(std::stod(input[1]),std::stod(input[2])),std::stoi(input[3]),std::stoi(input[4]));
+            line = "";
         }
 
     }catch(invalid_argument& ia){
         cerr << "Cannot parse a non-digit character into a double or an int\n Aborting program\n";
         exit(1);
     }catch(runtime_error& re){
-        cerr << "Name of Port Can't contain charcters different than letters\n Aborting program\n";
+        cerr << "Name of Port Can't contain characters different than letters\n Aborting program\n";
         exit(1);
     }
 }
@@ -71,6 +71,8 @@ void Controller::run() {
                 getline(cin,line);
                 stringstream ss(line);
                 std::vector<std::string> inputStringVector((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
+                if(inputStringVector.size() == 0)
+                    continue;
                 if(find(vecOfCommands.begin(),vecOfCommands.end(),inputStringVector[0]) != vecOfCommands.end())
                     hashMe = inputStringVector[0];
                 else if(find(vecOfCommands.begin(),vecOfCommands.end(),inputStringVector[1]) != vecOfCommands.end())
