@@ -28,8 +28,10 @@ void Controller::initPorts(int argc, char **argv) {
             input[1].erase(input[1].begin(),input[1].begin() + 1);
             input[1].pop_back();
             input[2].pop_back();
-            if(std::find_if(input[0].begin(), input[0].end(), [](char c) -> bool { return !std::isalpha(c); }) != input[0].end())
+            if(std::find_if(input[0].begin(), input[0].end(), [](char c) -> bool { return !std::isalpha(c); }) != input[0].end() ){
+                cout << input[0] << endl;
                 throw runtime_error("");
+            }
             Model::getInstance().addPort(input[0],Point(std::stod(input[1]),std::stod(input[2])),std::stoi(input[3]),std::stoi(input[4]));
         }
 
@@ -37,7 +39,7 @@ void Controller::initPorts(int argc, char **argv) {
         cerr << "Cannot parse a non-digit character into a double or an int\n Aborting program\n";
         exit(1);
     }catch(runtime_error& re){
-        cerr << "Name of Port Can't contain charcters different than letters\n";
+        cerr << "Name of Port Can't contain charcters different than letters\n Aborting program\n";
         exit(1);
     }
 }
@@ -101,12 +103,15 @@ void Controller::run() {
 
 
                     case InputCommand::STATUS:
-                        cout << "In status\n";
+                        if(inputStringVector.size() != 1)
+                            throw MyExceptions::InvalidArgument("Status doesn't need any arguments");
                         Model::getInstance().printAllObjectsStatus();
                         break;
 
 
                     case InputCommand::GO:
+                        if(inputStringVector.size() != 1)
+                            throw MyExceptions::InvalidArgument("Go doesn't need any arguments");
                         Model::getInstance().go();
                         break;
 

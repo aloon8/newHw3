@@ -97,7 +97,13 @@ void Model::go() {
             point.y = std::stod(Command[3]);
             (*findShip(Command[0]))->Moving(point,std::stoi(Command[4]));
         }else if(Command[1] == "destination"){
-            (*findShip(Command[0]))->Moving((*findPort(Command[3])),std::stoi(Command[4]));
+//            (*findShip(Command[0]))->Moving((*findPort(Command[3])),std::stoi(Command[3]));
+            auto tmpShip = (*findShip(Command[0]));
+            cout << "aFter Find Ship\n";
+            auto tmpPort = (*findPort(Command[2]));
+            cout << "after Find Port\n";
+            tmpShip->Moving(tmpPort,std::stoi(Command[3]));
+
         }else if(Command[1] == "load_at"){
             (*findShip(Command[0]))->load_at((*findPort(Command[2])));
         }else if(Command[1] == "unload_at"){
