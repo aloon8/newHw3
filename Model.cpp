@@ -3,7 +3,7 @@
 //
 
 #include "Model.h"
-#include "ShipFactory.h
+#include "ShipFactory.h"
 
 
 const vector<shared_ptr<Port>> &Model::getPortVec() const {
