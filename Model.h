@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <memory>
 #include "AbstractFactory.h"
 #include "Ship.h"
