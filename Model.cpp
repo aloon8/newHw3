@@ -100,6 +100,7 @@ void Model::go() {
 //            (*findShip(Command[0]))->Moving((*findPort(Command[3])),std::stoi(Command[3]));
             auto tmpShip = (*findShip(Command[0]));
             cout << "aFter Find Ship\n";
+            cout << "vfebe";
             auto tmpPort = (*findPort(Command[2]));
             cout << "after Find Port\n";
             tmpShip->Moving(tmpPort,std::stoi(Command[3]));
