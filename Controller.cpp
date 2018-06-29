@@ -71,8 +71,6 @@ void Controller::run() {
                 getline(cin,line);
                 stringstream ss(line);
                 std::vector<std::string> inputStringVector((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
-                //because commands are the first or second word in the string, I'm checking if the first word is a ship and if not it's a command
-                //hashMe = Model::getInstance().findShip(inputStringVector[1]) == Model::getInstance().getShipVec().end() ? inputStringVector[0] : inputStringVector[1];
                 if(find(vecOfCommands.begin(),vecOfCommands.end(),inputStringVector[0]) != vecOfCommands.end())
                     hashMe = inputStringVector[0];
                 else if(find(vecOfCommands.begin(),vecOfCommands.end(),inputStringVector[1]) != vecOfCommands.end())
@@ -116,9 +114,8 @@ void Controller::run() {
                         break;
 
 
-
-
                     case InputCommand::CREATE:
+
 
                         if(inputStringVector.size() < 6 || inputStringVector.size() > 7)
                             throw MyExceptions::InvalidArgument("Create needs 7 or 6 arguments");
@@ -160,7 +157,7 @@ void Controller::run() {
 
                         if(inputStringVector.size() != 4) // exactly 4 arguments
                             throw MyExceptions::InvalidArgument("Course needs 4 arguments");
-                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
 
                         tmpShip = (*Model::getInstance().findShip(inputStringVector[0]));
@@ -179,9 +176,10 @@ void Controller::run() {
 
 
                     case InputCommand::POSITION:
+
                         if(inputStringVector.size() != 5) // exactly 5 arguments
                             throw MyExceptions::InvalidArgument("Position needs 5 arguments");
-                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         tmpShip = (*Model::getInstance().findShip(inputStringVector[0]));
 
@@ -208,7 +206,7 @@ void Controller::run() {
 
                         if(inputStringVector.size() != 4)
                             throw MyExceptions::InvalidArgument("Destination needs exactly 4 arguments");
-                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
 
                         tmpShip = (*Model::getInstance().findShip(inputStringVector[0]));
@@ -236,7 +234,7 @@ void Controller::run() {
 
                         if(inputStringVector.size() != 3)
                             throw MyExceptions::InvalidArgument("Load at needs exactly 3 arguments");
-                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         if(Model::getInstance().findPort(inputStringVector[2]) == Model::getInstance().getPortVec().end())
                             throw MyExceptions::InvalidArgument("Port doesn't exist");
@@ -250,7 +248,7 @@ void Controller::run() {
 
                         if(inputStringVector.size() != 4)
                             throw MyExceptions::InvalidArgument("Unload at needs exactly 4 arguments");
-                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         if(Model::getInstance().findPort(inputStringVector[2]) == Model::getInstance().getPortVec().end())
                             throw MyExceptions::InvalidArgument("Port doesn't exist");
@@ -267,7 +265,7 @@ void Controller::run() {
                             throw MyExceptions::InvalidInput("Command not found");
                         if(inputStringVector.size() != 3)
                             throw MyExceptions::InvalidArgument("Dock at needs exactly 3 arguments");
-                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                        if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         if(Model::getInstance().findPort(inputStringVector[2]) == Model::getInstance().getPortVec().end())
                             throw MyExceptions::InvalidArgument("Port doesn't exist");
@@ -282,7 +280,7 @@ void Controller::run() {
                         if(inputStringVector.size() != 3)
                             throw MyExceptions::InvalidArgument("Attack needs exactly 3 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() ||
-                           Model::getInstance().findShip(inputStringVector[2]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                           Model::getInstance().findShip(inputStringVector[2]) == Model::getInstance().getShipVec().end()) // checks if the ship exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
                         break;
