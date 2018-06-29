@@ -31,6 +31,8 @@ public:
 
     static const int MAX_SPEED_CRUISER = 75;
 
+    void initVectorCommands();
+
 private:
     int hashing(std::string);
 
@@ -39,6 +41,7 @@ private:
                std::find_if(s.begin(), s.end(), [](char c) { return !(std::isdigit(c) || c == '.'); }) == s.end();
     }
     //View view;
+    std::vector<string> vecOfCommands;
 };
 
 

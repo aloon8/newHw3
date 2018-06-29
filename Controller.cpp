@@ -58,28 +58,28 @@ void Controller::run() {
     Point point;
     int resOatt, rangeOcap,speed;
     bool inLoop = true;
-    //std::vector<string> inputStringVector;
-
+    initVectorCommands();
     //create = 628
 
-    typedef  enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214, CREATE = 1, COURSE = 657, POSITION = 885,
+    typedef  enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214, CREATE = 628, COURSE = 657, POSITION = 885,
         DESTINATION = 1186, LOAD_AT = 724, UNLOAD_AT = 951, DOCK_AT = 725, ATTACK = 632, REFUEL = 643, STOP = 454, EXIT = 442 } InputCommand;
-
-    try{
         while(inLoop){
-            line = "";
-            cin >> line;
-            stringstream ss(line);
-            //inputStringVector.clear();
-            std::vector<std::string> inputStringVector((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
-//            while(ss >> tmp) // inserting all the other arguments into a string vector
-//                inputStringVector.emplace_back(tmp);
+            try{
+                line = "";
+                getline(cin,line);
+                stringstream ss(line);
+                std::vector<std::string> inputStringVector((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
+                //because commands are the first or second word in the string, I'm checking if the first word is a ship and if not it's a command
+                //hashMe = Model::getInstance().findShip(inputStringVector[1]) == Model::getInstance().getShipVec().end() ? inputStringVector[0] : inputStringVector[1];
+                if(find(vecOfCommands.begin(),vecOfCommands.end(),inputStringVector[0]) != vecOfCommands.end())
+                    hashMe = inputStringVector[0];
+                else if(find(vecOfCommands.begin(),vecOfCommands.end(),inputStringVector[1]) != vecOfCommands.end())
+                    hashMe = inputStringVector[1];
+                else
+                    throw MyExceptions::InvalidInput("Command not found");
 
-            //because commands are the first or second word in the string, I'm checking if the first word is a ship and if not it's a command
-            cout << "first : " << inputStringVector[0] << "  sc :" ;//<< inputStringVector[1] << endl;
-            //hashMe = Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() ? inputStringVector[1] : inputStringVector[0];
-            cout << Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() << endl;
-                switch(1) {
+
+                switch(hashing(hashMe)) {
                     case InputCommand::DEFAULT:
                         break;
 
@@ -101,15 +101,12 @@ void Controller::run() {
 
 
                     case InputCommand::STATUS:
-                        if(inputStringVector[0] != "status")
-                            throw MyExceptions::InvalidInput("Command not found");
+                        cout << "In status\n";
                         Model::getInstance().printAllObjectsStatus();
                         break;
 
 
                     case InputCommand::GO:
-                        if(inputStringVector[0] != "go")
-                            throw MyExceptions::InvalidInput("Command not found");
                         Model::getInstance().go();
                         break;
 
@@ -117,12 +114,9 @@ void Controller::run() {
 
 
                     case InputCommand::CREATE:
-                        cout << "Raviv" << endl;
-                        if(inputStringVector[0] != "create")
-                            throw MyExceptions::InvalidInput("Command not found");
 
-                        if(inputStringVector.size() < 5 || inputStringVector.size() > 6)
-                            throw MyExceptions::InvalidArgument("Create needs 5 or 6 arguments");
+                        if(inputStringVector.size() < 6 || inputStringVector.size() > 7)
+                            throw MyExceptions::InvalidArgument("Create needs 7 or 6 arguments");
 
                         if(Model::getInstance().findShip(inputStringVector[1]) != Model::getInstance().getShipVec().end()) // checks if the ship already exists
                             throw MyExceptions::InvalidInput("Ship already exists");
@@ -152,15 +146,13 @@ void Controller::run() {
                         }else {
                             Model::getInstance().addShip(inputStringVector[2], inputStringVector[1], point, resOatt);
                         }
-                         break;
+                        break;
 
 
 
 
                     case InputCommand::COURSE:
 
-                        if(inputStringVector[1] != "course") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
                         if(inputStringVector.size() != 4) // exactly 4 arguments
                             throw MyExceptions::InvalidArgument("Course needs 4 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
@@ -171,8 +163,8 @@ void Controller::run() {
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to a double or an int");
                         speed = stoi(inputStringVector[3]);
                         if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL > speed)  ||
-                                (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER > speed) ||
-                                (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER > speed))
+                            (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER > speed) ||
+                            (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER > speed))
                             throw MyExceptions::InvalidArgument("Speed given is more than this ship can handle");
 
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector); //inserting to the vector that holds all the commands for next time update
@@ -182,8 +174,6 @@ void Controller::run() {
 
 
                     case InputCommand::POSITION:
-                        if(inputStringVector[1] != "position") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
                         if(inputStringVector.size() != 5) // exactly 5 arguments
                             throw MyExceptions::InvalidArgument("Position needs 5 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
@@ -196,9 +186,10 @@ void Controller::run() {
                         inputStringVector[3].pop_back(); // erasing ')'
                         if( !isNumber(inputStringVector[2]) || !isNumber(inputStringVector[3]) || !isNumber(inputStringVector[4]))
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to a double or an int");
-                        if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL > speed)  ||
-                            (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER > speed) ||
-                            (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER > speed))
+                        speed = stoi(inputStringVector[4]);
+                        if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL < speed)  ||
+                            (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER < speed) ||
+                            (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER < speed))
                             throw MyExceptions::InvalidArgument("Speed given is more than this ship can handle");
 
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
@@ -209,32 +200,35 @@ void Controller::run() {
 
 
                     case InputCommand::DESTINATION:
-                        if(inputStringVector[1] != "destination") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
+
                         if(inputStringVector.size() != 4)
                             throw MyExceptions::InvalidArgument("Destination needs exactly 4 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
+
                         tmpShip = (*Model::getInstance().findShip(inputStringVector[0]));
 
-                        if(Model::getInstance().findPort(inputStringVector[2]) == Model::getInstance().getPortVec().end())
+                        if(Model::getInstance().findPort(inputStringVector[2]) == Model::getInstance().getPortVec().end()) {
                             throw MyExceptions::InvalidArgument("Port doesn't exist");
-                        if(!isNumber(inputStringVector[3]))
+                        }
+                        if(!isNumber(inputStringVector[3])) {
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to an integer");
-
-                        if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL > speed)  ||
-                            (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER > speed) ||
-                            (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER > speed))
+                        }
+                        speed = stoi(inputStringVector[3]);
+                        if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL < speed)  ||
+                            (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER < speed) ||
+                            (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER < speed)) {
                             throw MyExceptions::InvalidArgument("Speed given is more than this ship can handle");
+                        }
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
+
                         break;
 
 
 
 
                     case InputCommand::LOAD_AT:
-                        if(inputStringVector[1] != "load_at") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
+
                         if(inputStringVector.size() != 3)
                             throw MyExceptions::InvalidArgument("Load at needs exactly 3 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
@@ -248,8 +242,7 @@ void Controller::run() {
 
 
                     case InputCommand::UNLOAD_AT:
-                        if(inputStringVector[1] != "unload_at") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
+
                         if(inputStringVector.size() != 4)
                             throw MyExceptions::InvalidArgument("Unload at needs exactly 4 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
@@ -280,12 +273,11 @@ void Controller::run() {
 
 
                     case InputCommand::ATTACK:
-                        if(inputStringVector[1] != "attack") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
+
                         if(inputStringVector.size() != 3)
                             throw MyExceptions::InvalidArgument("Attack needs exactly 3 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end() ||
-                                Model::getInstance().findShip(inputStringVector[2]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
+                           Model::getInstance().findShip(inputStringVector[2]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
                         break;
@@ -294,8 +286,7 @@ void Controller::run() {
 
 
                     case InputCommand::REFUEL:
-                        if(inputStringVector[1] != "refuel") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
+
                         if(inputStringVector.size() != 2)
                             throw MyExceptions::InvalidArgument("Refuel needs exactly 2 arguments");
                         if(Model::getInstance().findShip(inputStringVector[0]) == Model::getInstance().getShipVec().end()) // checks if the ship already exists
@@ -309,8 +300,7 @@ void Controller::run() {
 
 
                     case InputCommand::STOP:
-                        if(inputStringVector[1] != "stop") // checking command validation
-                            throw MyExceptions::InvalidInput("Command not found");
+
                         if(inputStringVector.size() != 2)
                             throw MyExceptions::InvalidArgument("Stop needs exactly 2 arguments");
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
@@ -322,13 +312,11 @@ void Controller::run() {
                     case InputCommand::EXIT:
                         inLoop = false;
                         break;
-                default:
-                    cout << "Command not found\n";
+                    default:
+                        cout << "Command not found\n";
 
-                } // switch
-            } //while
-        }//try
-        catch (MyExceptions::InvalidInput& ii) {
+            } // switch
+        }  catch (MyExceptions::InvalidInput& ii) {
             ii.print();
         }catch (MyExceptions::InvalidArgument& ia){
             ia.print();
@@ -341,6 +329,31 @@ void Controller::run() {
         }catch (MyExceptions::OutOfRangeException& s){
             s.print();
         }
+    }//while
 
-    }// function run()
+}
+
+
+void Controller::initVectorCommands() {
+    vecOfCommands.emplace_back("create");
+    vecOfCommands.emplace_back("course");
+    vecOfCommands.emplace_back("go");
+    vecOfCommands.emplace_back("status");
+    vecOfCommands.emplace_back("pan");
+    vecOfCommands.emplace_back("default");
+    vecOfCommands.emplace_back("size");
+    vecOfCommands.emplace_back("zoom");
+    vecOfCommands.emplace_back("show");
+    vecOfCommands.emplace_back("position");
+    vecOfCommands.emplace_back("destination");
+    vecOfCommands.emplace_back("load_at");
+    vecOfCommands.emplace_back("unload_at");
+    vecOfCommands.emplace_back("dock_at");
+    vecOfCommands.emplace_back("attack");
+    vecOfCommands.emplace_back("refuel");
+    vecOfCommands.emplace_back("stop");
+    vecOfCommands.emplace_back("exit");
+
+}
+// function run()
 

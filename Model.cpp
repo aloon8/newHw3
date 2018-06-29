@@ -73,6 +73,7 @@ std::vector<shared_ptr<Port>>::iterator Model::findPort(const string &name) {
     while(beg != end) {
         if((*beg)->getPortName() == name)
             return beg;
+        beg++;
     }
     return beg;
 }
