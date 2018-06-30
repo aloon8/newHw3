@@ -63,7 +63,7 @@ void Controller::run() {
     int resOatt, rangeOcap,speed;
     bool inLoop = true;
     initVectorCommands();
-    //create = 628
+
 
     typedef  enum {    DEFAULT = 741, SIZE = 443, ZOOM = 453, PAN = 319, SHOW = 449, STATUS = 676, GO = 214, CREATE = 628, COURSE = 657, POSITION = 885,
         DESTINATION = 1186, LOAD_AT = 724, UNLOAD_AT = 951, DOCK_AT = 725, ATTACK = 632, REFUEL = 643, STOP = 454, EXIT = 442 } InputCommand;
@@ -86,10 +86,16 @@ void Controller::run() {
 
                 switch(hashing(hashMe)) {
                     case InputCommand::DEFAULT:
+                        if(inputStringVector.size() != 1)
+                            throw MyExceptions::InvalidInput("Default doesn't need any arguments");
+                        view.defaultParam();
                         break;
 
 
                     case InputCommand::SIZE:
+                        if(inputStringVector.size() != 2)
+                            throw MyExceptions::InvalidInput("Size needs exactly 2 arguments");
+
                         break;
 
 
@@ -345,7 +351,7 @@ void Controller::run() {
         }
     }//while
 
-}
+} // functon run
 
 
 void Controller::initVectorCommands() {

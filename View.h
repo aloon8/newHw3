@@ -12,7 +12,7 @@ class View {
 
 public:
 
-    View(Model& mo) : model(mo), size(5), scale(2.0), axis(Point(0,0)) {}
+    View(Model& mo) : model(mo), size(15), scale(5.0), axis(Point(-20.00,-20.00)) {}
 
     void defaultParam();
 
@@ -24,7 +24,9 @@ public:
 
     void addObjectView(const Point& p , const string& str);
 
-    int spaces(int spc);
+    string printSpacesForNumber(int num);
+
+    string printAtStart(int num);
 
 
 private:
