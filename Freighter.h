@@ -19,6 +19,8 @@ public:
 
     virtual void printStatus() const;
 
+    virtual void stop();
+
     virtual TypeIdShip getTypeName(){ return myType;}
 
     virtual void Moving(weak_ptr<class Port> port, int speed);
@@ -49,19 +51,15 @@ public:
 
     void setContainers(int Containers);
 
-    int getGas() const;
-
-    void setGas(int Gas);
-
     static const int GAS_USE_PER_NM_FREIGHTER = 1000; // use of gas per nm
 
 private:
 
-    int Resistance, Containers, Gas;
+    int Resistance, Containers;
+
+    double Gas;
 
     TypeIdShip myType;
-
-    //LoadingStatus loadStatus;
 
     const int maxContainers;
 

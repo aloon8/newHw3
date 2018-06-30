@@ -27,6 +27,8 @@ public:
 
     void printStatus();
 
+    void eraseFromGasQue(std::string shipName);
+
     friend bool operator==(std::weak_ptr<Port> port1 ,std::weak_ptr<Port> port2){
         return port1.lock()->portName==port2.lock()->portName;
     }

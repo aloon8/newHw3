@@ -107,7 +107,7 @@ void Model::go() {
             } else if (Command[1] == "refuel") {
                 (*findShip(Command[0]))->refuel();
             } else if (Command[1] == "stop") {
-                //(*findShip(Command[0]))->stop();
+                (*findShip(Command[0]))->stop();
                 stopThisShip(Command[1]);
             } else if (Command[1] == "attack") {
                 (*findShip(Command[0]))->attack((*findShip(Command[2])));
@@ -134,4 +134,8 @@ void Model::stopThisShip(const string &shipName) {
     }
 }
 
-
+void Model::sortVectorOfPort() {//sorting vector of ports
+    sort(portVec.begin(), portVec.end(), [](const shared_ptr<Port> a, const shared_ptr<Port> b) -> bool {
+         return a->getPortName() < b->getPortName();
+     });
+}

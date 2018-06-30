@@ -42,6 +42,8 @@ void Controller::initPorts(int argc, char **argv) {
         cerr << "Name of Port Can't contain characters different than letters\n Aborting program\n";
         exit(1);
     }
+    Model::getInstance().sortVectorOfPort();
+
 }
 
 int Controller::hashing(std::string name){
@@ -172,9 +174,9 @@ void Controller::run() {
                         if(!isNumber(inputStringVector[2]) || !isNumber(inputStringVector[3])) // checking that we got numbers
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to a double or an int");
                         speed = stoi(inputStringVector[3]);
-                        if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL > speed)  ||
-                            (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER > speed) ||
-                            (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER > speed))
+                        if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL < speed)  ||
+                            (tmpShip->getTypeName() == Ship::CR && MAX_SPEED_CRUISER < speed) ||
+                            (tmpShip->getTypeName() == Ship::FR && MAX_SPEED_FREIGHTER < speed))
                             throw MyExceptions::InvalidArgument("Speed given is more than this ship can handle");
 
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector); //inserting to the vector that holds all the commands for next time update

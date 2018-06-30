@@ -26,7 +26,17 @@ void Port::printStatus() {
 
 void Port::insertToGasQueue(std::vector<shared_ptr<Ship>>::iterator it) {
     shipQueue.push_back(*it);
+}
 
+void Port::eraseFromGasQue(std::string shipName) {
+    auto begin = shipQueue.begin();
+    auto end = shipQueue.end();
+    for( ; begin != end; begin++){
+        if((*begin).lock()->getName() == shipName){
+            shipQueue.erase(begin);
+            return;
+        }
+    }
 }
 
 

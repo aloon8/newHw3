@@ -25,14 +25,6 @@ void Freighter::setContainers(int Containers) {
     Freighter::Containers = Containers;
 }
 
-int Freighter::getGas() const {
-    return Gas;
-}
-
-void Freighter::setGas(int Gas) {
-    Freighter::Gas = Gas;
-}
-
 void Freighter::update() {
     if(status == Ship::Status::Docked){
         docked();
@@ -145,7 +137,7 @@ void Freighter::dock(std::weak_ptr<Port> port) {
         trackBase.setSpeed(0);
         trackBase.setPosition(port.lock()->getPosition());
     }
-    //throw
+    throw MyExceptions::ShipStatusException("The port isn't in distance of 0.1 nm so the ship cannot dock ");
 }
 
 void Freighter::decreaseGas() {
@@ -159,7 +151,7 @@ void Freighter::decreaseGas() {
 void Freighter::printStatus() const {
     cout << "Freighter " << name << " at ";
     trackBase.getPosition().print();
-    cout << " , fuel: " << Gas << "kl, resistance:" << Resistance << ", ";
+    cout << " , fuel: " << fixed << Gas/1000 << " kl, resistance:" << Resistance << ", ";
     if(status == Ship::Status::MovingTo)
         printMoveWay();
     else if(status == Ship::Status::Stopped)
@@ -192,5 +184,12 @@ bool Freighter::existInMissionQue() {
             return true;
     }
     return false;
+}
+
+void Freighter::stop() {
+    missionQue.clear();
+    trackBase.getPort().lock()->eraseFromGasQue(name);
+    existInQueueGas = false;
+    status = Stopped;
 }
 

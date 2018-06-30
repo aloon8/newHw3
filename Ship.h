@@ -28,7 +28,7 @@ public:
 
     virtual TypeIdShip getTypeName()=0;
 
-//    void Stop();
+    virtual void stop()=0;
 
     virtual void load_at(std::weak_ptr<Port> port){}
 

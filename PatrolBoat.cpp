@@ -158,7 +158,7 @@ void PatrolBoat::printStatus() const {
 
     cout << "Patrol_boat " << name << " at ";
     trackBase.getPosition().print();
-    cout << ", fuel: " << setprecision(2)<< Gas << " kl, resistance: "
+    cout << ", fuel: " << fixed << Gas/1000 << " kl, resistance: "
          << Resistance << ", ";
 
     if(status == Ship::MovingTo)
@@ -197,6 +197,11 @@ int PatrolBoat::getNumOfMoves() const {
 
 void PatrolBoat::setNumOfMoves(int numOfMoves) {
     PatrolBoat::numOfMoves = numOfMoves;
+}
+
+void PatrolBoat::stop() {
+    status = Stopped;
+    numOfMoves = 3; // when the value of "numOfMoves" the ship does not in round
 }
 
 

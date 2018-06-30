@@ -20,6 +20,8 @@ public:
     void update();
 
     void printStatus() const;
+
+    virtual void stop();
 private:
     int Force_of_attack, range;
 

@@ -39,7 +39,7 @@ void Cruiser::attack(std::weak_ptr<Ship> ship){
             Force_of_attack--;
             fr->setResistance(fr->getResistance()+1);
         }
-        fr->setNumOfMoves(3);
+        fr->setNumOfMoves(3); // when the value of "numOfMoves" the ship does not in round
     }
 }
 
@@ -52,6 +52,10 @@ void Cruiser::printStatus() const {
     else if(status == Ship::Status::Stopped)
         cout << "Stopped";
     cout << endl;
+}
+
+void Cruiser::stop() {
+    status = Stopped;
 }
 
 

@@ -17,7 +17,7 @@ class Model {
 public:
     //void create(string shipName, TrackBase::MovingType type, const Point& pos, int resOatt, int rangeOcap = 0 );
 
-    Model();
+
 
     ~Model(){}
 
@@ -30,6 +30,8 @@ public:
     void addShip( const string& shipType ,const string& shipName , Point& pos, int resOatt, int rangeOcap = 0 );
 
     void printAllObjectsStatus();
+
+    void sortVectorOfPort();
 
     std::vector<shared_ptr<Ship>>::iterator findShip(const string& name);
 
@@ -64,6 +66,8 @@ private:
     std::vector<std::vector<std::string>> vectorOfCommands;
 
     int time;
+
+    Model();
 };
 
 

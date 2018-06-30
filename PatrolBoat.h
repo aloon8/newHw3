@@ -26,6 +26,8 @@ public:
 
     virtual void printStatus() const;
 
+    virtual void stop();
+
     const vector<shared_ptr<Ship>>& getVecShip()const{ return Model::getInstance().getShipVec();}
 
     void docked();
@@ -52,7 +54,9 @@ public:
     void setNumOfMoves(int numOfMoves);
 
 private:
-    int Resistance,index,numOfMoves,Gas;
+    int Resistance,index,numOfMoves;
+
+    double Gas;
 
     TypeIdShip myType;
 
