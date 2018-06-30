@@ -19,17 +19,17 @@ void Cruiser::attack(std::weak_ptr<Ship> ship){
         throw MyExceptions::OutOfRangeException("The ship is out of range for attack");
     }
     ship.lock()->setStatus(Stopped);
-    if(ship.lock()->getTypeName() == Ship::TypeIdShip::FR) {
+    if(ship.lock()->getTypeName() == Ship::TypeIdShip::FR) {//if the ship is attacked is a freighter
         auto fr = dynamic_pointer_cast<Freighter>(ship.lock());
 
-        if (Force_of_attack > fr->getResistance()) {
+        if (Force_of_attack > fr->getResistance()) {// compares the resistance and force
             Force_of_attack++;
             fr->setContainers(0);
         } else {
             Force_of_attack--;
         }
     }
-    else if(ship.lock()->getTypeName() == Ship::TypeIdShip::PB){
+    else if(ship.lock()->getTypeName() == Ship::TypeIdShip::PB){//if the ship is attacked is a patrol boat
         auto fr = dynamic_pointer_cast<PatrolBoat>(ship.lock());
         if(Force_of_attack > fr->getResistance()){
             Force_of_attack++;

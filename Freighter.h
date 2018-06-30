@@ -11,9 +11,22 @@
 class Freighter : public Ship {
 public:
 
-    //typedef enum {NotLoadOrUnload, Loading, Unloading} LoadingStatus;
+    static const int GAS_USE_PER_NM_FREIGHTER = 1000; // use of gas per nm
 
+    static const int MAX_GAS_FREIGHTER = 500000; // max gas that a freighter can contain
+
+
+    /******** The big 5 *********/
     Freighter(std::string shipName, const Point& pos,int Resistance,int Containers);
+
+//    Freighter(const Freighter&) = default;
+//
+//    Freighter(const Freighter&&) = default;
+//
+//    Freighter& operator=(const Freighter&) = default;
+//
+//    Freighter& operator=(const Freighter&&) = default;
+//    virtual ~Freighter() = default;
 
     virtual void update();
 
@@ -29,29 +42,19 @@ public:
 
     virtual void Moving(double angle, int speed);
 
+    virtual void load_at(std::weak_ptr<Port> port);// loading containers at a specific port
+
     void docked();//when the ship is docked
 
     void dock(std::weak_ptr<Port> port);//when the ship in radius 0.1 from specific port
 
-    virtual void load_at(std::weak_ptr<Port> port);
+    void unload_at(std::weak_ptr<Port> port, int containers);//unloading number of containers in a specific port
 
-    void unload_at(std::weak_ptr<Port> port, int containers);
-
-
-    static const int MAX_GAS_FREIGHTER = 500000; // max gas that a freighter can contain
-
-    virtual void refuelAfterQue();
-
+    virtual void refuelAfterQue(); //when a ship exit from refuel queue. the function fuel the ship
 
     int getResistance() const;
 
-    void setResistance(int Resistance);
-
-    int getContainers() const;
-
     void setContainers(int Containers);
-
-    static const int GAS_USE_PER_NM_FREIGHTER = 1000; // use of gas per nm
 
 private:
 

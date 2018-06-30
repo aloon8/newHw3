@@ -16,8 +16,8 @@
 class Port {
 public:
 
-    Port(const std::string portName,const Point& pos, const int GasStoke, const int produce ) : portName(portName), position(pos)
-                                                                                                ,gasStoke(GasStoke), produce(produce){
+    Port(const std::string portName,const Point& pos, const int GasStoke, const int produce ) : portName(portName), position(pos),
+                                                                                                gasStoke(GasStoke), produce(produce){
 
     }
 
@@ -27,46 +27,38 @@ public:
 
     void printStatus();
 
-    void eraseFromGasQue(std::string shipName);
+    void eraseFromGasQue(std::string shipName);// erasing from gas queue
+
+    bool theShipFirstInQue(const std::string& shipName );//checks if ship is first in queue
 
     friend bool operator==(std::weak_ptr<Port> port1 ,std::weak_ptr<Port> port2){
         return port1.lock()->portName==port2.lock()->portName;
     }
 
+
+    /********** Getters & Setters **********/
     const string &getPortName() const {
         return portName;
-    }
-
-    void setPortName(const string &portName) {
-        Port::portName = portName;
     }
 
     const Point &getPosition() const {
         return position;
     }
 
-    void setPosition(const Point &position) {
-        Port::position = position;
-    }
-
-    int getGasStoke() const {
+    double getGasStoke() const {
         return gasStoke;
     }
 
-    void setGasStoke(int gasStoke) {
+    void setGasStoke(double gasStoke) {
         Port::gasStoke = gasStoke;
-    }
-
-    const int getProduce() const {
-        return produce;
     }
 
 private:
     std::string portName;
-    list<weak_ptr<Ship>> shipQueue;
-    Point position;
-    int gasStoke;
-    const int produce;
+    list<weak_ptr<Ship>> shipQueue;//queue of refuels
+    Point position;//position of port
+    double gasStoke;
+    const int produce;//produce gas
 };
 
 

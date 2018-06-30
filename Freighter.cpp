@@ -9,22 +9,6 @@
 Freighter::Freighter(std::string shipName, const Point& pos, int Resistance,int Containers) : Ship(shipName, pos), Resistance(Resistance)
         , Containers(Containers), Gas(MAX_GAS_FREIGHTER), myType(FR), maxContainers(Containers){}
 
-int Freighter::getResistance() const {
-    return Resistance;
-}
-
-void Freighter::setResistance(int Resistance) {
-    Freighter::Resistance = Resistance;
-}
-
-int Freighter::getContainers() const {
-    return Containers;
-}
-
-void Freighter::setContainers(int Containers) {
-    Freighter::Containers = Containers;
-}
-
 void Freighter::update() {
     if(status == Ship::Status::Docked){
         docked();
@@ -35,7 +19,6 @@ void Freighter::update() {
     }
 }
 
-
 void Freighter::Moving(weak_ptr<class Port> port, int speed) {
     if(status == Ship::Status::DeadInTheWater){
         throw MyExceptions::ShipStatusException("The ship is dead in the water, can't move");
@@ -44,7 +27,7 @@ void Freighter::Moving(weak_ptr<class Port> port, int speed) {
         if(existInMissionQue()){
             throw MyExceptions::ShipStatusException("The ship needs to unload or load in this port");
         }
-        else if(existInQueueGas) {
+        else if(existInQueueGas) {//checks if the ship in fuel queue
             throw MyExceptions::ShipRefuelException("The ship needs to refuel before move");
         }
     }
@@ -53,6 +36,7 @@ void Freighter::Moving(weak_ptr<class Port> port, int speed) {
     trackBase.setPort(port);
     trackBase.setSpeed(speed);
 }
+
 
 void Freighter::Moving(Point &point, int speed) {
     if(status == Ship::Status::DeadInTheWater){
@@ -91,17 +75,19 @@ void Freighter::Moving(double angle, int speed) {
     trackBase.setSpeed(speed);
 }
 
-
+/*missionQue holds pair of port name in th first field and in the second filed holds the string load*/
 void Freighter::load_at(std::weak_ptr<Port> port) {
     std::pair<std::string,std::string> load{port.lock()->getPortName(), "load"};
     missionQue.emplace_back(port.lock()->getPortName(), "load");
 }
 
+/*missionQue holds pair of port name in th first field and in the second filed holds num of containers to unload*/
 void Freighter::unload_at(std::weak_ptr<Port> port, int containers) {
     stringstream os{};
     os << containers;
     missionQue.emplace_back(std::make_pair(port.lock()->getPortName(),os.str()));
 }
+
 
 void Freighter::docked() {//when the ship docks
     auto begin = missionQue.begin();
@@ -111,6 +97,8 @@ void Freighter::docked() {//when the ship docks
             break;
     }
     if(begin != end){//if the vector have this port its means that have a command to do
+        if(trackBase.getPort().lock()->theShipFirstInQue(name))//checks if the ship first in queue and that command load or unload will be in the next time step
+            return;
         if((*begin).second == "load"){
             Containers = maxContainers;
         }
@@ -118,7 +106,7 @@ void Freighter::docked() {//when the ship docks
             stringstream iss{(*begin).second};
             int numOfContainers;
             iss >> numOfContainers;
-            if(numOfContainers >= Containers){
+            if(numOfContainers >= Containers){//checks if the user want to unload containers more than ship has
                 Containers = 0;
                 cout << "Warnings the ship " << name << "doesn't have enough containers to unload " << endl;
             }
@@ -131,13 +119,14 @@ void Freighter::docked() {//when the ship docks
 }
 
 void Freighter::dock(std::weak_ptr<Port> port) {
-    if(trackBase.getPosition().distance(port.lock()->getPosition()) <= 0.1){
+    if(trackBase.getPosition().distance(port.lock()->getPosition()) <= 0.1){//checks if the ship can docks
         setStatus(Ship::Status::Docked);
         trackBase.setPort(port);
         trackBase.setSpeed(0);
         trackBase.setPosition(port.lock()->getPosition());
     }
-    throw MyExceptions::ShipStatusException("The port isn't in distance of 0.1 nm so the ship cannot dock ");
+    else
+        throw MyExceptions::ShipStatusException("The port isn't in distance of 0.1 nm so the ship cannot dock ");
 }
 
 void Freighter::decreaseGas() {
@@ -151,7 +140,7 @@ void Freighter::decreaseGas() {
 void Freighter::printStatus() const {
     cout << "Freighter " << name << " at ";
     trackBase.getPosition().print();
-    cout << " , fuel: " << fixed << Gas/1000 << " kl, resistance:" << Resistance << ", ";
+    cout << " , fuel: " << fixed << Gas/1000 << " kl, resistance: " << Resistance << ", ";
     if(status == Ship::Status::MovingTo)
         printMoveWay();
     else if(status == Ship::Status::Stopped)
@@ -166,7 +155,7 @@ void Freighter::printStatus() const {
 
 void Freighter::refuelAfterQue() {
     auto port  = trackBase.getPort().lock();
-    if((port->getGasStoke()+Gas) <= MAX_GAS_FREIGHTER){
+    if((port->getGasStoke()+Gas) <= MAX_GAS_FREIGHTER){//when the port doesn't enough gas to fuel
         Gas += port->getGasStoke();
         port->setGasStoke(0);
     }
@@ -191,5 +180,13 @@ void Freighter::stop() {
     trackBase.getPort().lock()->eraseFromGasQue(name);
     existInQueueGas = false;
     status = Stopped;
+}
+
+int Freighter::getResistance() const {
+    return Resistance;
+}
+
+void Freighter::setContainers(int Containers) {
+    Freighter::Containers = Containers;
 }
 

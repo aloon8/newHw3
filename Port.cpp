@@ -21,14 +21,14 @@ void Port::update(){
 void Port::printStatus() {
     cout << "Port " << portName << " at position ";
     position.print();
-    cout << ", Fuel available: " << setprecision(2) << gasStoke << " kl" << endl;
+    cout << ", Fuel available: " << fixed << gasStoke/1000 << " kl" << endl;
 }
 
 void Port::insertToGasQueue(std::vector<shared_ptr<Ship>>::iterator it) {
     shipQueue.push_back(*it);
 }
 
-void Port::eraseFromGasQue(std::string shipName) {
+void Port::eraseFromGasQue(std::string shipName) {// erasing from gas queue
     auto begin = shipQueue.begin();
     auto end = shipQueue.end();
     for( ; begin != end; begin++){
@@ -37,6 +37,12 @@ void Port::eraseFromGasQue(std::string shipName) {
             return;
         }
     }
+}
+
+bool Port::theShipFirstInQue(const std::string &shipName) {//checks if ship is first in queue
+    if(!shipQueue.empty() && shipQueue.front().lock()->getName() == shipName)
+        return true;
+    return false;
 }
 
 

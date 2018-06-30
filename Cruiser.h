@@ -15,9 +15,9 @@ public:
 
     virtual TypeIdShip getTypeName(){ return myType;}
 
-    virtual void attack(std::weak_ptr<Ship> ship);
+    virtual void attack(std::weak_ptr<Ship> ship);//attacking a specific ship in range of attack
 
-    void update();
+    void update();//updating the next move
 
     void printStatus() const;
 

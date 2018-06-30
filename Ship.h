@@ -19,12 +19,27 @@ public:
 
     typedef enum{PB, FR, CR} TypeIdShip;
 
+    /******** The big 5 *********/
+
     Ship(const std::string& name,const Point& point, const Status& status = Status::Stopped );
 
+    /*Ship(const Ship&) = default;
+
+    Ship(const Ship&&) = default;
+
+    Ship& operator=(const Ship&) = default;
+
+    Ship& operator=(const Ship&&) = default;
+
+    virtual ~Ship() = default;*/
+
     friend bool operator==(std::shared_ptr<Ship> s1, const Ship& s2){return s1->name == s2.name;}
+
     friend bool operator==(std::shared_ptr<Ship> s1 , std::weak_ptr<Ship> s2) {return s1->name == s2.lock()->name;}
 
+    virtual void update() = 0;
 
+    virtual void printStatus() const = 0;
 
     virtual TypeIdShip getTypeName()=0;
 
@@ -34,15 +49,15 @@ public:
 
     virtual void Moving(weak_ptr<Port> port, int speed){}
 
-    virtual void unload_at(std::weak_ptr<Port> port, int containers){}
-
-    virtual void dock(std::weak_ptr<Port> port){}
-
     virtual void Moving(Point& point, int speed);
 
     virtual void Moving(double angle, int speed);
 
-    virtual void stepOnWater();
+    virtual void unload_at(std::weak_ptr<Port> port, int containers){}
+
+    virtual void dock(std::weak_ptr<Port> port){}
+
+    virtual void stepOnWater();//calculate the next move of ship in water, with three ways: 1. with angle, 2. with port, 3.with point
 
     virtual void attack(std::weak_ptr<Ship> ship){}
 
@@ -50,17 +65,13 @@ public:
 
     void refuel();
 
-    inline std::string getName(){return name;}
-
-    virtual void update() = 0;
-
-    virtual void printStatus() const = 0;
-
     void printMoveWay()const;
 
-    const TrackBase &getTrackBase() const;
+    /******* getters & setters *******/
 
-    Status getStatus() const;
+    inline std::string getName(){return name;}
+
+    const TrackBase &getTrackBase() const;
 
     void setStatus(Status status);
 

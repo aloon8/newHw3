@@ -9,18 +9,6 @@
 Ship::Ship(const string& name,const Point& point, const Status& status ) :
         name(name), trackBase(TrackBase(point)), status(status), existInQueueGas(false){}
 
-const TrackBase &Ship::getTrackBase() const {
-    return trackBase;
-}
-
-Ship::Status Ship::getStatus() const {
-    return status;
-}
-
-void Ship::setStatus(Ship::Status status) {
-    Ship::status = status;
-}
-
 void Ship::printMoveWay() const {
     if(trackBase.getMovingWay() == TrackBase::MovingType::PointDest){
         cout << "Moving to ";
@@ -34,10 +22,11 @@ void Ship::printMoveWay() const {
              << trackBase.getSpeed() << " nm/hr ";
     }
     else if(trackBase.getMovingWay() == TrackBase::MovingType::Angle){
-        cout << "Moving on course " << trackBase.getAngle() << " deg, speed " << trackBase.getSpeed() << " nm/hr ";
+        cout << "Moving on course " << fixed << trackBase.getAngle() << " deg, speed " << trackBase.getSpeed() << " nm/hr ";
     }
 }
 
+/*moving only for the cruiser the other will be overloaded*/
 void Ship::Moving(Point &point, int speed) {
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::PointDest);
@@ -45,6 +34,7 @@ void Ship::Moving(Point &point, int speed) {
     trackBase.setSpeed(speed);
 }
 
+/*moving only for the cruiser the other will be overloaded*/
 void Ship::Moving(double angle, int speed) {
     setStatus(Ship::Status::MovingTo);
     trackBase.setMovingWay(TrackBase::Angle);
@@ -52,6 +42,7 @@ void Ship::Moving(double angle, int speed) {
     trackBase.setSpeed(speed);
 }
 
+/*calculate the next move of ship in water, with three ways: 1. with angle, 2. with port, 3.with point*/
 void Ship::stepOnWater() {
     //this function will be the next movement of ship
     if(trackBase.getMovingWay() == TrackBase::Angle){
@@ -93,6 +84,14 @@ void Ship::refuel() {
         trackBase.getPort().lock()->insertToGasQueue(ship);
         existInQueueGas = true;
     }
+}
+
+const TrackBase &Ship::getTrackBase() const {
+    return trackBase;
+}
+
+void Ship::setStatus(Ship::Status status) {
+    Ship::status = status;
 }
 
 
