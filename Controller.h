@@ -20,11 +20,13 @@ using namespace std;
 class Controller {
 
 public:
-    Controller(int argc, char* argv[]);
+    Controller(int argc, char* argv[]); // Ctor -> initializes model and view as well
 
-    void initPorts(int argc, char* argv[]);
+    void initPorts(int argc, char* argv[]); //initializes the ports from argv
 
-    void run();
+    void run(); // function that communicates with user
+
+    /** Saving the Max Speed of every boat**/
 
     static const int MAX_SPEED_PATROL = 15;
 
@@ -32,14 +34,19 @@ public:
 
     static const int MAX_SPEED_CRUISER = 75;
 
-    void initVectorCommands();
-
 private:
     int hashing(std::string);
 
-    inline bool isNumber(const std::string& s) {
+    void initVectorCommands(); // initializes the vector with possible commands from user by a string
+
+    inline bool isDouble(const std::string& s) { // lambda func that checks if a given string is a double
         return !s.empty() &&
                std::find_if(s.begin(), s.end(), [](char c) { return !(std::isdigit(c) || c == '.' || c == '-'); }) == s.end();
+    }
+
+    inline bool isInteger(const std::string& s) {// lambda func that checks if a given string is am integer (all integers in the program must be positive)
+        return !s.empty() &&
+               std::find_if(s.begin(), s.end(), [](char c) { return !(std::isdigit(c)); }) == s.end();
     }
 
     std::vector<string> vecOfCommands;

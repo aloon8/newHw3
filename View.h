@@ -12,38 +12,22 @@ class View {
 
 public:
 
-    View(Model& mo) : model(mo), size(15), scale(5.0), axis(Point(-20.00,-20.00)) {}
+    View(Model& mo) : model(mo), size(25), scale(2.0), axis(Point(-10.00,-10.00)) {} // Ctor
 
-    void defaultParam();
+    void defaultParam(); // returns to default parameters
 
-    void initObjectView();
+    void show(); // prints the map to the screen
 
-    void show();
+    void setSize(int size); // sets the size
 
-    string BullsEye(const Point& current);
+    void setScale(double scale); // sets the scale
 
-    void addObjectView(const Point& p , const string& str);
+    void setAxis(const Point &axis); // sets the origin axis
 
-    string printSpacesForNumber(int num);
-
-    string printAtStart(int num);
+    int HowManyChars(int num); // returns how many characters there are in a given num and if it is negative or positive
 
 
 private:
-
-    class objectView{
-    public:
-        objectView(Point p, string str) : point(p), twoChars(str){}
-
-        Point point;
-
-        std:: string twoChars;
-
-    };
-
-    void sortObjectVector();
-
-    std::vector<objectView> objectsVec;
 
     Model& model;
 

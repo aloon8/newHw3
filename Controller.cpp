@@ -7,16 +7,18 @@
 
 using namespace std;
 
+
+/*Ctor, gets argc and argv. Initializes Model with getInstance and sends it to initialize view
+ * after that initializes the ports into the data structure and checks their validation */
 Controller::Controller(int argc, char **argv) : view(Model::getInstance()) {
-    Model::getInstance(); // creating the model
     initPorts(argc,argv);
-    view.initObjectView();
     run();
 }
 
+/*a function to initialize the ports we get from input file */
 void Controller::initPorts(int argc, char **argv) {
     if(argc < 2 ){ // has to get an input file to initialize the ports
-        cerr << "Not enouph files for program\n Aborting program\n";
+        cerr << "Not enough files for program\n Aborting program\n";
         exit(1);
     }
     string line = "";
@@ -25,9 +27,9 @@ void Controller::initPorts(int argc, char **argv) {
         while(getline(file,line)){
             istringstream iss(line);/*Separate the input of user by spaces*/
             std::vector<std::string> input((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>()); // holds the line seperated " "
-            input[1].erase(input[1].begin(),input[1].begin() + 1);
-            input[1].pop_back();
-            input[2].pop_back();
+            input[1].erase(input[1].begin(),input[1].begin() + 1); // erasing '(' from X
+            input[1].pop_back(); // erasing the ',' from X
+            input[2].pop_back(); // erasing the ')' from Y
             if(std::find_if(input[0].begin(), input[0].end(), [](char c) -> bool { return !std::isalpha(c); }) != input[0].end() ){
                 throw runtime_error("");
             }
@@ -45,7 +47,7 @@ void Controller::initPorts(int argc, char **argv) {
     Model::getInstance().sortVectorOfPort();
 
 }
-
+//A func that caclulates the sum of an ascii string -> for the commands and comuunication with user (There are no strings with same ascii sum value !!)
 int Controller::hashing(std::string name){
     int cnt = 0;
     std::transform(name.begin(), name.end(), name.begin(), ::tolower);
@@ -55,12 +57,20 @@ int Controller::hashing(std::string name){
     return cnt;
 }
 
+
+/*
+ * run handles the communication with the user. We hold a vector of strings for the command and it's arguments .
+ * for each argument of the command there is exactly the right input valid check for example for a double we check that there is only numbers and a point.
+ * If there is an invalid input we throw an exception and catch it at the bottom of the function
+ * */
+
 void Controller::run() {
     std::string  line,tmp, hashMe;
     const int MAX_SHIP_NAME = 12;
     shared_ptr<Ship> tmpShip;
     Point point;
-    int resOatt, rangeOcap,speed;
+    int resOatt, rangeOcap,speed,num;
+    double zoom;
     bool inLoop = true;
     initVectorCommands();
 
@@ -95,15 +105,33 @@ void Controller::run() {
                     case InputCommand::SIZE:
                         if(inputStringVector.size() != 2)
                             throw MyExceptions::InvalidInput("Size needs exactly 2 arguments");
-
+                        if(!isInteger(inputStringVector[1]))
+                            throw MyExceptions::ParsingError("Cannot parse a non-digit character into a integer that has to be positive");
+                        num = std::stoi(inputStringVector[1]);
+                        if(num > 30 || num <= 6)
+                            throw MyExceptions::InvalidArgument("Error : size of the map need to be between 7 and 30");
+                        view.setSize(num);
                         break;
 
 
                     case InputCommand::ZOOM:
+                        if(inputStringVector.size() != 2)
+                            throw MyExceptions::InvalidInput("Zoom needs exactly 2 arguments");
+                        if(!isDouble(inputStringVector[1]))
+                            throw MyExceptions::ParsingError("Cannot parse a non-digit character into a double");
+                        zoom = std::stod(inputStringVector[1]);
+                        if(zoom < 0)
+                            throw MyExceptions::InvalidArgument("New zoom size must be a positive double");
+                        view.setScale(zoom);
                         break;
 
 
                     case InputCommand::PAN:
+                        if(inputStringVector.size() != 3)
+                            throw MyExceptions::InvalidInput("Pan needs exactly 3 arguments");
+                        if(!isDouble(inputStringVector[1]) || !isDouble(inputStringVector[2]))
+                            throw MyExceptions::ParsingError("Cannot parse a non-digit character into a double");
+                        view.setAxis(Point(std::stod(inputStringVector[1]), std::stod(inputStringVector[2])));
                         break;
 
 
@@ -146,15 +174,14 @@ void Controller::run() {
                         if(inputStringVector[3][inputStringVector[3].size() - 1] == ',')
                             inputStringVector[3].pop_back();
                         inputStringVector[4].pop_back(); // erasing ')'
-                        if(!isNumber(inputStringVector[3]) || !isNumber(inputStringVector[4]) || !isNumber(inputStringVector[5]))
+                        if(!isDouble(inputStringVector[3]) || !isDouble(inputStringVector[4]) || !isInteger(inputStringVector[5]))
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to a double or an int");
 
-                        if(inputStringVector[2] != "Patrol_boat" && !isNumber(inputStringVector[6]))
+                        if(inputStringVector[2] != "Patrol_boat" && !isInteger(inputStringVector[6]))
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to a double or an int");
 
                         point.x = std::stod(inputStringVector[3]);
                         point.y = std::stod(inputStringVector[4]);
-                        view.addObjectView(point,inputStringVector[1].substr(0,2));
 
                         resOatt = std::stoi(inputStringVector[5]);//throws invalid_argument of c++ std exceptions if fails
 
@@ -177,7 +204,7 @@ void Controller::run() {
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
 
                         tmpShip = (*Model::getInstance().findShip(inputStringVector[0]));
-                        if(!isNumber(inputStringVector[2]) || !isNumber(inputStringVector[3])) // checking that we got numbers
+                        if(!isDouble(inputStringVector[2]) || !isDouble(inputStringVector[3])) // checking that we got numbers
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to a double or an int");
                         speed = stoi(inputStringVector[3]);
                         if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL < speed)  ||
@@ -203,7 +230,7 @@ void Controller::run() {
                         if(inputStringVector[2][inputStringVector[2].size() - 1] == ',')
                             inputStringVector[2].pop_back();
                         inputStringVector[3].pop_back(); // erasing ')'
-                        if( !isNumber(inputStringVector[2]) || !isNumber(inputStringVector[3]) || !isNumber(inputStringVector[4]))
+                        if( !isDouble(inputStringVector[2]) || !isDouble(inputStringVector[3]) || !isInteger(inputStringVector[4]))
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to a double or an int");
                         speed = stoi(inputStringVector[4]);
                         if( (tmpShip->getTypeName() == Ship::PB && MAX_SPEED_PATROL < speed)  ||
@@ -229,7 +256,7 @@ void Controller::run() {
                         if(Model::getInstance().findPort(inputStringVector[2]) == Model::getInstance().getPortVec().end()) {
                             throw MyExceptions::InvalidArgument("Port doesn't exist");
                         }
-                        if(!isNumber(inputStringVector[3])) {
+                        if(!isInteger(inputStringVector[3])) {
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to an integer");
                         }
                         speed = stoi(inputStringVector[3]);
@@ -267,7 +294,7 @@ void Controller::run() {
                             throw MyExceptions::InvalidInput("Ship doesn't exist");
                         if(Model::getInstance().findPort(inputStringVector[2]) == Model::getInstance().getPortVec().end())
                             throw MyExceptions::InvalidArgument("Port doesn't exist");
-                        if(!isNumber(inputStringVector[3]))
+                        if(!isInteger(inputStringVector[3]))
                             throw MyExceptions::ParsingError("Cannot parse a non-digit character to an integer");
                         Model::getInstance().getVectorOfCommands().emplace_back(inputStringVector);
                         break;
@@ -348,12 +375,17 @@ void Controller::run() {
             s.print();
         }catch (MyExceptions::OutOfRangeException& s){
             s.print();
-        }
+        }catch(...){
+                cout << "Problem occured\n";
+            }
     }//while
 
 } // functon run
 
 
+
+/* Here we initialize all the possible commands from the user, and in function run we check that the command given is a contained in a vector called vecOfCommands.
+ * if not it we throw an exception*/
 void Controller::initVectorCommands() {
     vecOfCommands.emplace_back("create");
     vecOfCommands.emplace_back("course");
